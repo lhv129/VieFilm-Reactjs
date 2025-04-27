@@ -1,13 +1,22 @@
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import routers from "@routers/routers"
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <h1 className="text-3xl font-bold underline py-8">
-      Hello world!
-    </h1>
+    <BrowserRouter>
+        <Routes>
+          {
+            routers.map((item, index) => {
+              return <Route
+                path={item.path}
+                element={<item.component />}
+                key={index}
+              />
+            })
+          }
+        </Routes>
+    </BrowserRouter>
   )
 }
 
