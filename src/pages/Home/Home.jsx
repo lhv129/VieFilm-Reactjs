@@ -41,7 +41,7 @@ const Home = () => {
                             <button
                                 key={tab.value}
                                 onClick={() => handleStatusChange(tab.value)}
-                                className={`pb-2 transition-all duration-300 ${movieDate === tab.value
+                                className={`pb-2 transition-all duration-300 cursor-pointer ${movieDate === tab.value
                                     ? 'text-[#337ab7] border-b-2 border-blue-600'
                                     : 'text-gray-500 hover:text-blue-400'
                                     }`}
