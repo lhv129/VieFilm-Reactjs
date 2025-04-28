@@ -11,10 +11,7 @@ function Auth() {
 
     return (
         <>
-            <Preloader></Preloader>
             <Header></Header>
-
-
             <div className="flex justify-center items-start mt-2">
                 <div className="w-[500px] bg-white rounded-lg shadow-md">
                     {/* Tabs */}

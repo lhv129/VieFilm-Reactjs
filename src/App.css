@@ -4,5 +4,10 @@
   margin: 0 auto;
   padding: 0 15px;
   box-sizing: border-box;
-  width: 100%;
+  width: 1150px;
+}
+@media (max-width: 640px) {
+  .container {
+    width: 100%;
+  }
 }
