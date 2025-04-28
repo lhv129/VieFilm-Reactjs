@@ -165,36 +165,38 @@ function Booking() {
                         <div className="min-w-[900px] mb-8 mt-8">
                             <img src="/images/showtimes/ic-screen.png" />
                         </div>
-                        <div className="min-w-[900px] flex justify-center">
-                            <div className="w-full space-y-2 mb-8">
-                                {Object.entries(
-                                    seats.reduce((acc, seat) => {
-                                        const row = seat.seatCode.match(/^[A-Z]+/)[0]; // lấy chữ cái đầu (có thể là A, B... hay AA)
-                                        if (!acc[row]) acc[row] = [];
-                                        acc[row].push(seat);
-                                        return acc;
-                                    }, {})
-                                ).map(([row, rowSeats]) => (
-                                    <div key={row} className="flex gap-2 justify-center">
-                                        {rowSeats
-                                            .sort((a, b) => {
-                                                const aNum = parseInt(a.seatCode.match(/\d+$/)[0]);
-                                                const bNum = parseInt(b.seatCode.match(/\d+$/)[0]);
-                                                return aNum - bNum;
-                                            })
-                                            .map((seat) => (
-                                                <div
-                                                    key={seat.seatCode}
-                                                    className={`w-10 h-10 flex items-center justify-center text-sm font-bold rounded-md ${getSeatClass(seat)}`}
-                                                    onClick={() => {
-                                                        if (!seat.isBooked) toggleSeat(seat.seatCode);
-                                                    }}
-                                                >
-                                                    {seat.seatCode}
-                                                </div>
-                                            ))}
-                                    </div>
-                                ))}
+                        <div className="inline-block min-w-[900px]">
+                            <div className="flex justify-center">
+                                <div className="w-full space-y-2 mb-8">
+                                    {Object.entries(
+                                        seats.reduce((acc, seat) => {
+                                            const row = seat.seatCode.match(/^[A-Z]+/)[0]; // lấy chữ cái đầu (có thể là A, B... hay AA)
+                                            if (!acc[row]) acc[row] = [];
+                                            acc[row].push(seat);
+                                            return acc;
+                                        }, {})
+                                    ).map(([row, rowSeats]) => (
+                                        <div key={row} className="flex gap-2 justify-center">
+                                            {rowSeats
+                                                .sort((a, b) => {
+                                                    const aNum = parseInt(a.seatCode.match(/\d+$/)[0]);
+                                                    const bNum = parseInt(b.seatCode.match(/\d+$/)[0]);
+                                                    return aNum - bNum;
+                                                })
+                                                .map((seat) => (
+                                                    <div
+                                                        key={seat.seatCode}
+                                                        className={`w-10 h-10 flex items-center justify-center text-sm font-bold rounded-md ${getSeatClass(seat)}`}
+                                                        onClick={() => {
+                                                            if (!seat.isBooked) toggleSeat(seat.seatCode);
+                                                        }}
+                                                    >
+                                                        {seat.seatCode}
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
