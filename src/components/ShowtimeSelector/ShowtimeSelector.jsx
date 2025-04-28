@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+
 
 const getDayOfWeek = (dateStr) => {
     const [day, month, year] = dateStr.split('/').map(Number);
@@ -14,6 +16,9 @@ const formatDayMonth = (dateStr) => {
 };
 
 const ShowtimeSelector = ({ showtimes }) => {
+
+    const navigate = useNavigate();
+
     const groupedShowtimes = showtimes.reduce((acc, showtime) => {
         const { date } = showtime;
         if (!acc[date]) acc[date] = [];
@@ -40,8 +45,8 @@ const ShowtimeSelector = ({ showtimes }) => {
                         key={date}
                         onClick={() => setSelectedDate(date)}
                         className={`flex flex-col items-center cursor-pointer py-2 ${selectedDate === date
-                                ? "text-[#337ab7] font-bold border-b-2 border-blue-400"
-                                : "text-gray-600"
+                            ? "text-[#337ab7] font-bold border-b-2 border-blue-400"
+                            : "text-gray-600"
                             } basis-1/3 md:basis-1/7`}
                     >
                         <span className="text-lg">{getDayOfWeek(date)}</span>
@@ -57,7 +62,10 @@ const ShowtimeSelector = ({ showtimes }) => {
                         key={showtime._id}
                         className="flex flex-col items-center py-2 basis-1/3 md:basis-1/7"
                     >
-                        <button className="w-4/5 py-2 bg-gray-100 cursor-pointer rounded-md text-base font-semibold hover:bg-blue-100 transition">
+                        <button
+                            className="w-4/5 py-2 bg-gray-100 cursor-pointer rounded-md text-base font-semibold hover:bg-blue-100 transition"
+                            onClick={() => navigate('/dat-ve/chon-ghe', { state: { showtimeId: showtime._id } })}
+                        >
                             {showtime.startTime}
                         </button>
                         <span className="text-xs text-gray-500 mt-1">{showtime.emptySeats} ghế trống</span>

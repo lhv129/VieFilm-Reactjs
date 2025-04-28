@@ -58,6 +58,7 @@ function ChooseCinema() {
         setSelectedCinema({ _id: cinema._id, name: cinema.name });
         setOpen(false);
         setOpenProvinceIndex(null);
+        window.location.href = '/';
     };
 
     const handleProvinceClickMobile = (index) => {

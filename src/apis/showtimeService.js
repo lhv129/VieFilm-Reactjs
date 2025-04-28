@@ -10,9 +10,18 @@ const getAllByMovie = async (date, cinemaId, movieId) => {
         });
         return res.data;
     } catch (error) {
-        console.error("Lỗi khi gọi Api Movie", error);
+        console.error("Lỗi khi gọi Api Showtime", error);
+    }
+}
+
+const getSeats = async (showtimeId) => {
+    try {
+        const res = await axiosClient.post('/showtimes/get-seats-by-showtime', {showtimeId} );
+        return res.data;
+    } catch (error) {
+        console.error("Lỗi khi gọi Showtime", error);
     }
 }
 
 
-export { getAllByMovie };
+export { getAllByMovie, getSeats };

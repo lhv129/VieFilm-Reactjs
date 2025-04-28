@@ -13,6 +13,10 @@ const routers = [
     {
         path: '/dang-nhap',
         component: lazy(() => import("@pages/Auth/Auth"))
+    },
+    {
+        path: '/dat-ve/chon-ghe',
+        component: lazy(() => import("@pages/Booking/Booking"))
     }
 ]
 

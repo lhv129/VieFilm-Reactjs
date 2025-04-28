@@ -27,4 +27,13 @@ const getOne = async (slug) => {
     }
 }
 
-export { getMovies, getMoviesByDate, getOne };
+const getOneById = async (id) => {
+    try {
+        const res = await axiosClient.get(`/movies/get-one-by-id/${id}`);
+        return res.data;
+    } catch (error) {
+        console.error("Lỗi khi gọi Api Movie", error);
+    }
+}
+
+export { getMovies, getMoviesByDate, getOne, getOneById };
