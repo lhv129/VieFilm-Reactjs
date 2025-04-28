@@ -1,10 +1,10 @@
 import Header from "@components/Header/Header";
-import Preloader from '@components/Preloader/Preloader';
 import MovieSlider from '@components/MovieSlider/MovieSlider';
 import MovieList from "@components/MovieList/MovieList";
 import { useEffect, useState } from "react";
 import { getMoviesByDate } from "@apis/movieService";
 import { motion, AnimatePresence } from "framer-motion";
+import Footer from "@components/Footer/Footer";
 
 
 const Home = () => {
@@ -42,8 +42,8 @@ const Home = () => {
                                 key={tab.value}
                                 onClick={() => handleStatusChange(tab.value)}
                                 className={`pb-2 transition-all duration-300 ${movieDate === tab.value
-                                        ? 'text-[#337ab7] border-b-2 border-blue-600'
-                                        : 'text-gray-500 hover:text-blue-400'
+                                    ? 'text-[#337ab7] border-b-2 border-blue-600'
+                                    : 'text-gray-500 hover:text-blue-400'
                                     }`}
                             >
                                 {tab.label}
@@ -65,7 +65,7 @@ const Home = () => {
                     )}
                 </AnimatePresence>
             </div>
-
+            <Footer></Footer>
         </>
     )
 }

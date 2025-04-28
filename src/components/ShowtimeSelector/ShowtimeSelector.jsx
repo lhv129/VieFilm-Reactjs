@@ -40,7 +40,7 @@ const ShowtimeSelector = ({ showtimes }) => {
                         key={date}
                         onClick={() => setSelectedDate(date)}
                         className={`flex flex-col items-center cursor-pointer py-2 ${selectedDate === date
-                                ? "text-blue-600 font-bold border-b-2 border-blue-600"
+                                ? "text-[#337ab7] font-bold border-b-2 border-blue-400"
                                 : "text-gray-600"
                             } basis-1/3 md:basis-1/7`}
                     >

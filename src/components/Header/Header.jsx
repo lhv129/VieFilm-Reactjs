@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link } from 'react-router-dom';
-
+import ChooseCinema from "@components/ChooseCinema/ChooseCinema";
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -13,8 +13,6 @@ export default function Header() {
         "TIN MỚI VÀ ƯU ĐÃI",
         "THÀNH VIÊN",
     ];
-
-    const [cinema] = useState("Beta Thanh Xuân");
 
     return (
         <header className="w-full shadow-md">
@@ -39,10 +37,7 @@ export default function Header() {
                         </Link>
                     </div>
                     <div className="flex items-center">
-                        <button className="text-sm font-medium border px-3 py-1 rounded-full hover:bg-gray-100 flex items-center">
-                            {cinema}
-                            <ChevronDown className="w-4 h-4 ml-1" />
-                        </button>
+                        <ChooseCinema />
                     </div>
                 </div>
 

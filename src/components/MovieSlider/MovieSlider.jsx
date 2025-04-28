@@ -29,7 +29,7 @@ const slides = [
 
 export default function Banner() {
     return (
-        <div className="relative w-full h-[400px] md:h-screen overflow-hidden">
+        <div className="relative w-full h-[300px] md:h-screen overflow-hidden">
             {/* Background mờ */}
             <div className="absolute inset-0 z-0 opacity-100">
                 <img

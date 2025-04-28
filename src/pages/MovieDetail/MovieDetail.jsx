@@ -6,12 +6,17 @@ import { getAllByMovie } from "@apis/showtimeService";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ShowtimeSelector from "@components/ShowtimeSelector/ShowtimeSelector";
+import Footer from "@components/Footer/Footer";
 
 function MovieDetail() {
     const { slug } = useParams();
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showtimes, setShowtimes] = useState([]);
+    const [cinemaId, setCinemaId] = useState(() => {
+        const cinema = JSON.parse(localStorage.getItem('cinema'));
+        return cinema?._id || null;
+    });
 
     // Lấy ngày hiện tại
     const today = new Date();
@@ -28,10 +33,11 @@ function MovieDetail() {
                 if (movieRes && movieRes.data) {
                     setMovie(movieRes.data);
 
-                    // Sau khi có movie thì lấy luôn suất chiếu
-                    const showtimeRes = await getAllByMovie(currentDate, "68035db82d21be7453864e99", movieRes.data._id);
-                    if (showtimeRes && showtimeRes.data) {
-                        setShowtimes(showtimeRes.data);
+                    if (cinemaId) {
+                        const showtimeRes = await getAllByMovie(currentDate, cinemaId, movieRes.data._id);
+                        if (showtimeRes && showtimeRes.data) {
+                            setShowtimes(showtimeRes.data);
+                        }
                     }
                 } else {
                     setMovie(null);
@@ -45,7 +51,21 @@ function MovieDetail() {
         };
 
         fetchData();
-    }, [slug]);
+    }, [slug, cinemaId]); // 👈 Thêm cinemaId vào dependency array
+
+    // Theo dõi thay đổi cinema trong localStorage
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const cinema = JSON.parse(localStorage.getItem('cinema'));
+            const newCinemaId = cinema?._id || null;
+
+            if (newCinemaId !== cinemaId) {
+                setCinemaId(newCinemaId);
+            }
+        }, 1000); // Kiểm tra mỗi 1s (bạn có thể điều chỉnh)
+
+        return () => clearInterval(interval);
+    }, [cinemaId]);
 
     if (loading) return <Preloader />;
     if (!movie) return <NotFound />;
@@ -87,6 +107,7 @@ function MovieDetail() {
                     </div>
                 )}
             </div>
+            <Footer />
         </>
     );
 }

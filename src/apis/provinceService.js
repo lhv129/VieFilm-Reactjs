@@ -9,4 +9,13 @@ const getProvinces = async () => {
     }
 }
 
-export { getProvinces };
+const getCinemaByProvince = async () => {
+    try {
+        const res = await axiosClient.get('/provinces/get-cinema-by-province');
+        return res.data;
+    } catch (error) {
+        console.error("Lỗi khi gọi Api Province", error);
+    }
+}
+
+export { getProvinces, getCinemaByProvince };

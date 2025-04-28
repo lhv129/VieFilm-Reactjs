@@ -36,24 +36,46 @@ const MovieList = ({ movies }) => {
                     className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
                     style={{ minHeight: '500px' }}
                 >
-                    <div className="relative">
-                        <img
-                            src={movie.poster}
-                            alt={movie.title}
-                            onClick={() => openTrailer(movie.trailer)}
-                            className="w-full h-full object-cover cursor-pointer lg:h-80"
-                        />
-                        <div
-                            className="absolute top-2 left-2 w-[57px] h-[26px] bg-cover bg-center"
-                            style={{
-                                backgroundImage: `url(${movie.ageRating === 'P' ? '/images/movies/tagsAge/p.png' :
-                                    movie.ageRating === 'T13' ? '/images/movies/tagsAge/c-13.png' :
-                                        movie.ageRating === 'T16' ? '/images/movies/tagsAge/c-16.png' :
-                                            movie.ageRating === 'T18' ? '/images/movies/tagsAge/c-18.png' :
-                                                ''
-                                    })`
-                            }}
-                        />
+                    <div className="relative group w-full h-full lg:h-80 cursor-pointer overflow-hidden rounded-xl shadow-md" onClick={() => openTrailer(movie.trailer)}>
+                        {/* Ảnh + Tag + Lớp tối */}
+                        <div className="relative w-full h-full">
+                            {/* Ảnh Poster */}
+                            <img
+                                src={movie.poster}
+                                alt={movie.title}
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            />
+
+                            {/* Thẻ tag tuổi */}
+                            <div
+                                className="absolute top-2 left-2 w-[57px] h-[26px] bg-cover bg-center"
+                                style={{
+                                    backgroundImage: `url(${movie.ageRating === 'P' ? '/images/movies/tagsAge/p.png'
+                                            : movie.ageRating === 'T13' ? '/images/movies/tagsAge/c-13.png'
+                                                : movie.ageRating === 'T16' ? '/images/movies/tagsAge/c-16.png'
+                                                    : movie.ageRating === 'T18' ? '/images/movies/tagsAge/c-18.png'
+                                                        : ''
+                                        })`
+                                }}
+                            />
+
+                            {/* Lớp phủ nền tối */}
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                        </div>
+
+                        {/* Icon Play */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <div className="bg-white bg-opacity-75 p-4 rounded-full">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-10 w-10 text-black"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path d="M8 5v14l11-7z" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="flex flex-col justify-between flex-1 p-4">
