@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { getOneById } from '@apis/roleService';
 
 const FormLogin = () => {
 
@@ -29,11 +28,7 @@ const FormLogin = () => {
             Cookies.set("user", JSON.stringify(user));
             setUser(user);
 
-            // Role check sau khi chắc chắn có user
-            const roleRes = await getOneById(user.roleId);
-            const role = roleRes.data;
-
-            if (role?.name === "Admin") {
+            if (user?.roleName === "Admin" || user?.roleName === "Staff") {
                 navigate("/admin");
             } else {
                 navigate("/");

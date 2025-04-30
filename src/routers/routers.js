@@ -17,14 +17,9 @@ const routers = [
         path: '/v1/auth/verify-email/:token',
         component: lazy(() => import("@pages/VerifyEmail/VerifyEmail"))
     },
-    {
-        path: '/dat-ve/chon-ghe',
-        component: lazy(() => import("@pages/Booking/Booking"))
-    },
-    {
-        path: '/admin',
-        component: lazy(() => import("@pages/Admin/Dashboard/Dashboard"))
-    },
+    { path: '/dat-ve/chon-ghe', component: lazy(() => import("@pages/Booking/Booking")), isPrivate: true },
+    { path: '/admin', component: lazy(() => import("@pages/Admin/Dashboard/Dashboard")), isAdmin: true },
+    { path: '/admin/phim', component: lazy(() => import("@pages/Admin/Movies/Movies")), isAdmin: true },
 ]
 
 export default routers;
