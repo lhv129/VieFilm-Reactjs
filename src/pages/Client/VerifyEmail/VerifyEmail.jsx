@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { verifyEmail } from "@apis/authService";
 import { toast } from "react-toastify";
 import Preloader from "@components/Preloader/Preloader";
+import { Helmet } from "react-helmet";
 
 function VerifyEmail() {
     const { token } = useParams();
     const navigate = useNavigate();
-
 
     useEffect(() => {
         verifyEmail(token).then((res) => {
@@ -41,7 +41,12 @@ function VerifyEmail() {
     })
 
     return (
-        <Preloader />
+        <>
+            <Helmet>
+                <title>Xác thực email</title>
+            </Helmet>
+            <Preloader />
+        </>
     );
 
 }

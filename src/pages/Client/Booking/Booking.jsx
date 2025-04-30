@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getSeats } from "@apis/showtimeService";
 import { getOneById } from "@apis/movieService";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
 import Preloader from "@components/Preloader/Preloader";
+import { Helmet } from "react-helmet";
+
 
 function Booking() {
     const location = useLocation();
@@ -131,7 +131,9 @@ function Booking() {
 
     return (
         <>
-            <Header />
+            <Helmet>
+                <title>Chọn ghế</title>
+            </Helmet>
             <div className="container flex flex-col md:flex-row p-4">
                 {/* Khu vực chọn ghế */}
                 <div className="md:w-2/3 flex flex-col items-center p-4">
@@ -253,7 +255,6 @@ function Booking() {
                     )}
                 </div>
             </div>
-            <Footer />
         </>
     );
 }

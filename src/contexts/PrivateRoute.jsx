@@ -7,7 +7,7 @@ const PrivateRoute = ({ children }) => {
     const user = useAuth();
 
     if (!user?.user) {
-        return <Navigate to="/dang-nhap" replace />;
+        return <Navigate to="/tai-khoan" replace />;
     }
 
     return children;

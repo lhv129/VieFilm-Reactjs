@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link } from 'react-router-dom';
 import ChooseCinema from "@components/ChooseCinema/ChooseCinema";
-import AuthMenu from "@components/Header/AuthMenu/AuthMenu";
+import AuthMenu from "@components/Header/Client/AuthMenu/AuthMenu";
 
-export default function Header() {
+export default function ClientHeader() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     
     const navItems = [

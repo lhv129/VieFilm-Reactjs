@@ -1,4 +1,3 @@
-import Header from "@components/Header/Header";
 import Preloader from "@components/Preloader/Preloader";
 import NotFound from "@pages/404NotFound/NotFound";
 import { getOne } from "@apis/movieService";
@@ -6,7 +5,7 @@ import { getAllByMovie } from "@apis/showtimeService";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ShowtimeSelector from "@components/ShowtimeSelector/ShowtimeSelector";
-import Footer from "@components/Footer/Footer";
+import { Helmet } from "react-helmet";
 
 function MovieDetail() {
     const { slug } = useParams();
@@ -66,7 +65,9 @@ function MovieDetail() {
 
     return (
         <>
-            <Header />
+            <Helmet>
+                <title>Chi tiết phim</title>
+            </Helmet>
             <div className="container mx-auto">
                 <div className="flex flex-col md:flex-row gap-10 mt-5">
                     {/* Poster */}
@@ -101,7 +102,6 @@ function MovieDetail() {
                     </div>
                 )}
             </div>
-            <Footer />
         </>
     );
 }

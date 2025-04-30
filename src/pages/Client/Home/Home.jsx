@@ -1,10 +1,9 @@
-import Header from "@components/Header/Header";
 import MovieSlider from '@components/MovieSlider/MovieSlider';
 import MovieList from "@components/MovieList/MovieList";
 import { useEffect, useState } from "react";
 import { getMoviesByDate } from "@apis/movieService";
 import { motion, AnimatePresence } from "framer-motion";
-import Footer from "@components/Footer/Footer";
+import { Helmet } from "react-helmet";
 
 
 const Home = () => {
@@ -29,7 +28,9 @@ const Home = () => {
 
     return (
         <>
-            <Header></Header>
+            <Helmet>
+                <title>VieFilm | Trang chủ</title>
+            </Helmet>
             <MovieSlider></MovieSlider>
             <div className="container min-h-screen">
                 <div className="flex justify-center mb-8 mt-6">
@@ -65,7 +66,6 @@ const Home = () => {
                     )}
                 </AnimatePresence>
             </div>
-            <Footer></Footer>
         </>
     )
 }

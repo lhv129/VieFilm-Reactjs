@@ -16,9 +16,18 @@ const formatDayMonth = (dateStr) => {
 
 const ShowtimeSelector = ({ showtimes }) => {
     const navigate = useNavigate();
+    const now = new Date();
 
-    // Sắp xếp tổng thể tất cả các suất chiếu theo ngày và giờ
-    const sortedShowtimes = [...showtimes].sort((a, b) => {
+    // Lọc chỉ những suất chiếu từ 00 giờ hôm nay trở đi
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const filteredShowtimes = showtimes.filter((showtime) => {
+        const [day, month, year] = showtime.date.split('/').map(Number);
+        const showtimeDate = new Date(year, month - 1, day);
+        return showtimeDate >= todayStart;
+    });
+
+    // Sắp xếp các suất chiếu
+    const sortedShowtimes = [...filteredShowtimes].sort((a, b) => {
         const [dayA, monthA, yearA] = a.date.split('/').map(Number);
         const [dayB, monthB, yearB] = b.date.split('/').map(Number);
         const dateA = new Date(yearA, monthA - 1, dayA);
@@ -42,8 +51,8 @@ const ShowtimeSelector = ({ showtimes }) => {
     }, {});
 
     const dates = Object.keys(groupedShowtimes);
+    const [selectedDate, setSelectedDate] = useState(dates[0] || null);
 
-    const [selectedDate, setSelectedDate] = useState(dates[0]);
 
     return (
         <div className="p-4">
@@ -66,20 +75,38 @@ const ShowtimeSelector = ({ showtimes }) => {
 
             {/* Các suất chiếu */}
             <div className="flex flex-wrap">
-                {groupedShowtimes[selectedDate].map((showtime) => (
-                    <div
-                        key={showtime._id}
-                        className="flex flex-col items-center py-2 basis-1/3 md:basis-1/7"
-                    >
-                        <button
-                            className="w-4/5 py-2 bg-gray-100 cursor-pointer rounded-md text-base font-semibold hover:bg-blue-100 transition"
-                            onClick={() => navigate('/dat-ve/chon-ghe', { state: { showtimeId: showtime._id } })}
+                {groupedShowtimes[selectedDate].map((showtime) => {
+                    const [day, month, year] = showtime.date.split('/').map(Number);
+                    const [hour, minute] = showtime.startTime.split(':').map(Number);
+                    const showtimeDate = new Date(year, month - 1, day, hour, minute);
+                    const isPast = showtimeDate < now;
+
+                    return (
+                        <div
+                            key={showtime._id}
+                            className="flex flex-col items-center py-2 basis-1/3 md:basis-1/7"
                         >
-                            {showtime.startTime}
-                        </button>
-                        <span className="text-xs text-gray-500 mt-1">{showtime.emptySeats} ghế trống</span>
-                    </div>
-                ))}
+                            <button
+                                className={`w-4/5 py-2 rounded-md text-base font-semibold transition 
+                                    ${isPast
+                                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                        : "bg-gray-100 hover:bg-blue-100 cursor-pointer"
+                                    }`}
+                                disabled={isPast}
+                                onClick={() =>
+                                    !isPast && navigate('/dat-ve/chon-ghe', {
+                                        state: { showtimeId: showtime._id }
+                                    })
+                                }
+                            >
+                                {showtime.startTime}
+                            </button>
+                            <span className={`text-xs mt-1 ${isPast ? "text-gray-400" : "text-gray-500"}`}>
+                                {showtime.emptySeats} ghế trống
+                            </span>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

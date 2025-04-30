@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Footer() {
+function AdminFooter() {
     return (
         <>
             <div className='w-full h-[1px] bg-gray-300 mt-8'></div>
@@ -71,4 +71,4 @@ function Footer() {
     );
 };
 
-export default Footer;
+export default AdminFooter;

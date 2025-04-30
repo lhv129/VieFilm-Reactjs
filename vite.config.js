@@ -15,5 +15,8 @@ export default defineConfig({
       '@services': path.resolve(__dirname, 'src/services'),
       '@apis': path.resolve(__dirname, 'src/apis'),
     }
-  }
+  },
+  optimizeDeps: {
+    include: ['react-icons/fa']
+  },
 })

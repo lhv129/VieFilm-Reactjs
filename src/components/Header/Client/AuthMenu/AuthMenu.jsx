@@ -79,9 +79,9 @@ function AuthMenu() {
                 </>
             ) : (
                 <div className="space-x-2">
-                    <Link to="/dang-nhap" className="hover:underline">Đăng nhập</Link>
+                    <Link to="/tai-khoan" className="hover:underline">Đăng nhập</Link>
                     <span>|</span>
-                    <Link to="/dang-ky" className="hover:underline">Đăng ký</Link>
+                    <Link to="/tai-khoan" className="hover:underline">Đăng ký</Link>
                 </div>
             )}
         </div>
