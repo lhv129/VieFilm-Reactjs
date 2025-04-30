@@ -122,7 +122,7 @@ const latestBookings = [
     { movie: 'Movie Z', cinema: 'Rạp D', time: '01:45 PM' },
 ];
 
-const Dashboard = () => {
+function Dashboard() {
     const [selectedProvince, setSelectedProvince] = useState('Hà Nội');
     const [selectedCinema, setSelectedCinema] = useState('Rạp A');
     const [selectedRange, setSelectedRange] = useState('week');
