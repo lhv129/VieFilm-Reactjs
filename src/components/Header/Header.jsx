@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link } from 'react-router-dom';
 import ChooseCinema from "@components/ChooseCinema/ChooseCinema";
+import AuthMenu from "@components/Header/AuthMenu/AuthMenu";
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    
     const navItems = [
         "LỊCH CHIẾU THEO RẠP",
         "PHIM",
@@ -19,9 +21,7 @@ export default function Header() {
             <div className="bg-black text-white text-xs flex justify-end items-center py-2">
                 <div className="container">
                     <div className="flex float-right">
-                        <Link to="/dang-nhap" className="hover:underline mr-2">Đăng nhập</Link>
-                        <span>|</span>
-                        <a href="#" className="hover:underline ml-2">Đăng ký</a>
+                        <AuthMenu />
                     </div>
                 </div>
             </div>

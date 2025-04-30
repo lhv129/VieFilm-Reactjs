@@ -1,44 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { Link } from "react-router-dom";
-import ShowtimeSelector from "@components/ShowtimeSelector/ShowtimeSelector";
 import { getAllByMovie } from "@apis/showtimeService";
-import MovieSkeleton from "@components/MovieSkeleton/MovieSkeleton"; // Thêm dòng này
+import MovieSkeleton from "@components/MovieSkeleton/MovieSkeleton";
+
+const ShowtimeSelector = lazy(() => import("@components/ShowtimeSelector/ShowtimeSelector"));
 
 const MovieList = ({ movies }) => {
     const [showTrailer, setShowTrailer] = useState(false);
     const [trailerUrl, setTrailerUrl] = useState("");
 
-    const openTrailer = (url) => {
-        setTrailerUrl(convertToEmbedUrl(url) + "?autoplay=1");
-        setShowTrailer(true);
-    };
-
-    const convertToEmbedUrl = (url) => {
-        if (!url) return "";
-        return url.replace("watch?v=", "embed/");
-    };
-
-    const closeTrailer = () => {
-        setShowTrailer(false);
-        setTrailerUrl("");
-    };
-
-    const handleBackdropClick = (e) => {
-        if (e.target.id === "backdrop") {
-            closeTrailer();
-        }
-    };
-
     const [showBooking, setShowBooking] = useState(false);
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [cinemaId, setCinemaId] = useState(null);
     const [cinemaName, setCinemaName] = useState('');
-    const [loadingMovies, setLoadingMovies] = useState(true); // Thêm loading cho movie
+    const [loadingMovies, setLoadingMovies] = useState(true);
     const [loadingShowtimes, setLoadingShowtimes] = useState(false);
     const [moviesWithShowtimes, setMoviesWithShowtimes] = useState([]);
-
-    const today = new Date();
-    const currentDate = `${today.getDate().toString().padStart(2, "0")}/${(today.getMonth() + 1).toString().padStart(2, "0")}/${today.getFullYear()}`;
+    const [showtimes, setShowtimes] = useState([]);
 
     useEffect(() => {
         const cinema = JSON.parse(localStorage.getItem('cinema'));
@@ -48,14 +26,13 @@ const MovieList = ({ movies }) => {
         }
     }, []);
 
-    // Fetch các phim có suất chiếu ngay khi render
     useEffect(() => {
         const fetchShowtimesForMovies = async () => {
             if (!cinemaId || movies.length === 0) return;
 
             try {
                 const promises = movies.map((movie) =>
-                    getAllByMovie(currentDate, cinemaId, movie._id)
+                    getAllByMovie(cinemaId, movie._id)
                         .then(res => ({ movieId: movie._id, hasShowtimes: res.data.length > 0 }))
                         .catch(() => ({ movieId: movie._id, hasShowtimes: false }))
                 );
@@ -70,19 +47,17 @@ const MovieList = ({ movies }) => {
             } catch (error) {
                 console.error("Error fetching showtimes for movies:", error);
             } finally {
-                setLoadingMovies(false); // Done loading
+                setLoadingMovies(false);
             }
         };
 
         fetchShowtimesForMovies();
-    }, [cinemaId, movies, currentDate]);
-
-    const [showtimes, setShowtimes] = useState([]);
+    }, [cinemaId, movies]);
 
     useEffect(() => {
         if (showBooking && selectedMovie) {
             setLoadingShowtimes(true);
-            getAllByMovie(currentDate, cinemaId, selectedMovie._id)
+            getAllByMovie(cinemaId, selectedMovie._id)
                 .then((res) => {
                     setShowtimes(res.data);
                 })
@@ -90,7 +65,28 @@ const MovieList = ({ movies }) => {
                     setLoadingShowtimes(false);
                 });
         }
-    }, [showBooking, selectedMovie, cinemaId, currentDate]);
+    }, [showBooking, selectedMovie, cinemaId]);
+
+    const openTrailer = (url) => {
+        setTrailerUrl(convertToEmbedUrl(url) + "?autoplay=1");
+        setShowTrailer(true);
+    };
+
+    const closeTrailer = () => {
+        setShowTrailer(false);
+        setTrailerUrl("");
+    };
+
+    const handleBackdropClick = (e) => {
+        if (e.target.id === "backdrop") {
+            closeTrailer();
+        }
+    };
+
+    const convertToEmbedUrl = (url) => {
+        if (!url) return "";
+        return url.replace("watch?v=", "embed/");
+    };
 
     return (
         <div className="relative">
@@ -112,16 +108,17 @@ const MovieList = ({ movies }) => {
                                     <img
                                         src={movie.poster}
                                         alt={movie.title}
+                                        loading="lazy" // 🔥 Lazy load image
                                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                     />
                                     <div
                                         className="absolute top-2 left-2 w-[57px] h-[26px] bg-cover bg-center"
                                         style={{
                                             backgroundImage: `url(${movie.ageRating === 'P' ? '/images/movies/tagsAge/p.png'
-                                                : movie.ageRating === 'T13' ? '/images/movies/tagsAge/c-13.png'
-                                                    : movie.ageRating === 'T16' ? '/images/movies/tagsAge/c-16.png'
-                                                        : movie.ageRating === 'T18' ? '/images/movies/tagsAge/c-18.png'
-                                                            : ''
+                                                    : movie.ageRating === 'T13' ? '/images/movies/tagsAge/c-13.png'
+                                                        : movie.ageRating === 'T16' ? '/images/movies/tagsAge/c-16.png'
+                                                            : movie.ageRating === 'T18' ? '/images/movies/tagsAge/c-18.png'
+                                                                : ''
                                                 })`
                                         }}
                                     />
@@ -130,12 +127,7 @@ const MovieList = ({ movies }) => {
 
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
                                     <div className="bg-white bg-opacity-75 p-4 rounded-full">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="h-10 w-10 text-black"
-                                            fill="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-black" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z" />
                                         </svg>
                                     </div>
@@ -240,7 +232,9 @@ const MovieList = ({ movies }) => {
                         ) : (
                             showtimes.length > 0 && (
                                 <div className="mt-10">
-                                    <ShowtimeSelector showtimes={showtimes} />
+                                    <Suspense fallback={<div>Đang tải giao diện đặt vé...</div>}>
+                                        <ShowtimeSelector showtimes={showtimes} />
+                                    </Suspense>
                                 </div>
                             )
                         )}

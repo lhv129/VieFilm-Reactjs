@@ -18,12 +18,6 @@ function MovieDetail() {
         return cinema?._id || null;
     });
 
-    // Lấy ngày hiện tại
-    const today = new Date();
-    const currentDate = `${today.getDate().toString().padStart(2, "0")}/${(today.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${today.getFullYear()}`;
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -34,7 +28,7 @@ function MovieDetail() {
                     setMovie(movieRes.data);
 
                     if (cinemaId) {
-                        const showtimeRes = await getAllByMovie(currentDate, cinemaId, movieRes.data._id);
+                        const showtimeRes = await getAllByMovie(cinemaId, movieRes.data._id);
                         if (showtimeRes && showtimeRes.data) {
                             setShowtimes(showtimeRes.data);
                         }

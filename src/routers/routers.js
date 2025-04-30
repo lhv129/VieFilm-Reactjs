@@ -1,6 +1,5 @@
 import { lazy } from "react";
 
-
 const routers = [
     {
         path: '/',
@@ -15,9 +14,17 @@ const routers = [
         component: lazy(() => import("@pages/Auth/Auth"))
     },
     {
+        path: '/v1/auth/verify-email/:token',
+        component: lazy(() => import("@pages/VerifyEmail/VerifyEmail"))
+    },
+    {
         path: '/dat-ve/chon-ghe',
         component: lazy(() => import("@pages/Booking/Booking"))
-    }
+    },
+    {
+        path: '/admin',
+        component: lazy(() => import("@pages/Admin/Dashboard/Dashboard"))
+    },
 ]
 
 export default routers;

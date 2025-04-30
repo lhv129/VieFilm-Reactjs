@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-
 const getDayOfWeek = (dateStr) => {
     const [day, month, year] = dateStr.split('/').map(Number);
     const date = new Date(year, month - 1, day);
@@ -16,23 +15,33 @@ const formatDayMonth = (dateStr) => {
 };
 
 const ShowtimeSelector = ({ showtimes }) => {
-
     const navigate = useNavigate();
 
-    const groupedShowtimes = showtimes.reduce((acc, showtime) => {
+    // Sắp xếp tổng thể tất cả các suất chiếu theo ngày và giờ
+    const sortedShowtimes = [...showtimes].sort((a, b) => {
+        const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+        const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+        const dateA = new Date(yearA, monthA - 1, dayA);
+        const dateB = new Date(yearB, monthB - 1, dayB);
+
+        if (dateA.getTime() !== dateB.getTime()) {
+            return dateA - dateB;
+        }
+
+        const [hA, mA] = a.startTime.split(':').map(Number);
+        const [hB, mB] = b.startTime.split(':').map(Number);
+        return hA * 60 + mA - (hB * 60 + mB);
+    });
+
+    // Nhóm theo ngày
+    const groupedShowtimes = sortedShowtimes.reduce((acc, showtime) => {
         const { date } = showtime;
         if (!acc[date]) acc[date] = [];
         acc[date].push(showtime);
         return acc;
     }, {});
 
-    const dates = Object.keys(groupedShowtimes).sort((a, b) => {
-        const [dayA, monthA, yearA] = a.split('/').map(Number);
-        const [dayB, monthB, yearB] = b.split('/').map(Number);
-        const dateA = new Date(yearA, monthA - 1, dayA);
-        const dateB = new Date(yearB, monthB - 1, dayB);
-        return dateA - dateB;
-    });
+    const dates = Object.keys(groupedShowtimes);
 
     const [selectedDate, setSelectedDate] = useState(dates[0]);
 

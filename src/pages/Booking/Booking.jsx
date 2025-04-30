@@ -16,6 +16,7 @@ function Booking() {
     const [timeLeft, setTimeLeft] = useState(600); // 600 giây = 10 phút
     const [movie, setMovie] = useState(null);
     const [showtime, setShowtime] = useState([]);
+    const [minWidth, setMinWidth] = useState(900);
 
     useEffect(() => {
         if (showtimeId) {
@@ -186,7 +187,7 @@ function Booking() {
                                                 .map((seat) => (
                                                     <div
                                                         key={seat.seatCode}
-                                                        className={`w-10 h-10 flex items-center justify-center text-sm font-bold rounded-md ${getSeatClass(seat)}`}
+                                                        className={`w-8 h-8 flex items-center justify-center text-[10px] rounded-md ${getSeatClass(seat)}`}
                                                         onClick={() => {
                                                             if (!seat.isBooked) toggleSeat(seat.seatCode);
                                                         }}
