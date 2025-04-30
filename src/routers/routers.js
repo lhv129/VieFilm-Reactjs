@@ -24,7 +24,7 @@ const routers = [
     },
     {
         path: '/admin',
-        component: lazy(() => import("@pages/Admin/Dashboard/Dashboard")),
+        component: lazy(() => import("@pages/Admin/Dashboardv2/Dashboard")),
         isAdmin: true,
     },
     {
