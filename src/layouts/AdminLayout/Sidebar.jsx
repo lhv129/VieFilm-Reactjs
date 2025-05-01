@@ -1,18 +1,71 @@
 import React from 'react';
-import { FaChartBar, FaShoppingCart, FaCalendar, FaTasks, FaUser, FaTimes } from 'react-icons/fa';
+import {
+    FaChartBar,
+    FaCalendar,
+    FaTasks,
+    FaUser,
+    FaTimes,
+    FaMapMarkerAlt,
+} from 'react-icons/fa';
 import classNames from 'classnames';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+    const location = useLocation();
+    const { user } = useAuth();
+
+    const allNavItems = [
+        {
+            icon: <FaChartBar />,
+            label: 'Thống kê',
+            to: '/admin/thong-ke',
+            roles: ['Admin', 'Staff'],
+        },
+        {
+            icon: <FaMapMarkerAlt />,
+            label: 'Tỉnh thành',
+            to: '/admin/tinh-thanh',
+            roles: ['Admin'],
+        },
+        {
+            icon: <FaCalendar />,
+            label: 'Calendar',
+            to: '/admin/calendar',
+            roles: ['Admin'],
+        },
+        {
+            icon: <FaTasks />,
+            label: 'Task',
+            to: '/admin/tasks',
+            roles: ['Admin'],
+        },
+        {
+            icon: <FaUser />,
+            label: 'User Profile',
+            to: '/admin/profile',
+            roles: ['Admin'],
+        },
+    ];
+
+    const navItems = allNavItems.filter((item) =>
+        item.roles.includes(user.roleName)
+    );
+
     return (
         <>
+            {/* Overlay khi mở sidebar trên mobile */}
             <div
                 className={classNames(
                     'fixed inset-0 z-40 transition-opacity lg:hidden',
-                    { hidden: !sidebarOpen }
+                    {
+                        hidden: !sidebarOpen,
+                    }
                 )}
                 onClick={() => setSidebarOpen(false)}
             />
 
+            {/* Sidebar chính */}
             <div
                 className={classNames(
                     'fixed z-50 h-full w-64 bg-white transition-transform transform border-r border-gray-200 lg:translate-x-0 lg:static',
@@ -22,42 +75,53 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     }
                 )}
             >
-                <div className="flex items-center justify-between p-4">
-                    <span className="text-xl font-bold text-blue-600 select-none">TailAdmin</span>
-                    <button className="lg:hidden text-gray-600 hover:text-red-500 transition" onClick={() => setSidebarOpen(false)}>
+                {/* Logo và nút đóng */}
+                <div className="flex items-center justify-between lg:justify-center p-4">
+                    <img
+                        src="/images/header/logo.png"
+                        className="w-20 cursor-pointer"
+                        alt="Logo"
+                    />
+                    <button
+                        className="lg:hidden text-gray-600 hover:text-red-500 transition cursor-pointer"
+                        onClick={() => setSidebarOpen(false)}
+                    >
                         <FaTimes />
                     </button>
                 </div>
 
+                {/* Navigation */}
                 <nav className="p-4 space-y-2">
-                    <NavItem icon={<FaChartBar />} label="Dashboard" />
-                    <NavItem icon={<FaShoppingCart />} label="Ecommerce" />
-                    <NavItem icon={<FaCalendar />} label="Calendar" />
-                    <NavItem icon={<FaTasks />} label="Task" />
-                    <NavItem icon={<FaUser />} label="User Profile" />
-                    <NavItem icon={<FaChartBar />} label="Dashboard" />
-                    <NavItem icon={<FaShoppingCart />} label="Ecommerce" />
-                    <NavItem icon={<FaCalendar />} label="Calendar" />
-                    <NavItem icon={<FaTasks />} label="Task" />
-                    <NavItem icon={<FaUser />} label="User Profile" />
-                    <NavItem icon={<FaChartBar />} label="Dashboard" />
-                    <NavItem icon={<FaShoppingCart />} label="Ecommerce" />
-                    <NavItem icon={<FaCalendar />} label="Calendar" />
-                    <NavItem icon={<FaTasks />} label="Task" />
-                    <NavItem icon={<FaUser />} label="User Profile" />
+                    {navItems.map((item, index) => (
+                        <NavItem
+                            key={index}
+                            icon={item.icon}
+                            label={item.label}
+                            to={item.to}
+                            active={location.pathname.startsWith(item.to)}
+                            onClick={() => setSidebarOpen(false)} // auto-close on mobile
+                        />
+                    ))}
                 </nav>
             </div>
         </>
     );
 };
 
-const NavItem = ({ icon, label }) => (
-    <div
-        className="flex items-center space-x-3 text-gray-700 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition cursor-pointer"
+const NavItem = ({ icon, label, to, active, onClick }) => (
+    <Link
+        to={to}
+        onClick={onClick}
+        className={classNames(
+            'flex items-center space-x-3 px-3 py-2 rounded-lg transition cursor-pointer',
+            active
+                ? 'bg-blue-100 text-blue-600 font-semibold'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+        )}
     >
         <div>{icon}</div>
         <div>{label}</div>
-    </div>
+    </Link>
 );
 
 export default Sidebar;

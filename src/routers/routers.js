@@ -23,7 +23,7 @@ const routers = [
         isPrivate: true,
     },
     {
-        path: '/admin',
+        path: '/admin/thong-ke',
         component: lazy(() => import("@pages/Admin/Dashboardv2/Dashboard")),
         isAdmin: true,
     },
@@ -33,9 +33,31 @@ const routers = [
         isAdmin: true,
     },
     {
+        path: '/admin/tinh-thanh',
+        component: lazy(() => import("@pages/Admin/Province/list")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/tinh-thanh/them-moi',
+        component: lazy(() => import("@pages/Admin/Province/create")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/tinh-thanh/:slug/chinh-sua',
+        component: lazy(() => import("@pages/Admin/Province/edit")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
         path: '*',
         component: lazy(() => import("@pages/404NotFound/NotFound")),
     },
+    {
+        path: "/unauthorized",
+        component: lazy(() => import("@pages/Unauthorized/Unauthorized")),
+    }
 ];
 
 export default routers;

@@ -8,6 +8,7 @@ import './App.css';
 import Preloader from '@components/Preloader/Preloader';
 import AdminRoute from '@/contexts/AdminRoute';
 import PrivateRoute from '@/contexts/PrivateRoute';
+import OnlyAdmin from '@/contexts/OnlyAdmin';
 
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout';
 import ClientLayout from '@/layouts/ClientLayout/ClientLayout';
@@ -33,7 +34,9 @@ function App() {
           }
 
           // Route guards
-          if (item.isAdmin) {
+          if (item.isOnlyAdmin) {
+            element = <OnlyAdmin>{element}</OnlyAdmin>;
+          } else if (item.isAdmin) {
             element = <AdminRoute>{element}</AdminRoute>;
           } else if (item.isPrivate) {
             element = <PrivateRoute>{element}</PrivateRoute>;

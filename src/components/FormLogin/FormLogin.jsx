@@ -29,7 +29,7 @@ const FormLogin = () => {
             setUser(user);
 
             if (user?.roleName === "Admin" || user?.roleName === "Staff") {
-                navigate("/admin");
+                navigate("/admin/thong-ke");
             } else {
                 navigate("/");
             }
