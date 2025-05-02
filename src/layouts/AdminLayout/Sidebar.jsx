@@ -1,14 +1,12 @@
 import React from 'react';
 import {
     FaChartBar,
-    FaCalendar,
-    FaTasks,
-    FaUser,
     FaTimes,
     FaMapMarkerAlt,
 } from 'react-icons/fa';
 import { RiMovie2AiFill } from "react-icons/ri";
 import { BiSolidCameraMovie } from "react-icons/bi";
+import { PiProjectorScreenFill } from "react-icons/pi";
 import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -43,10 +41,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             roles: ['Admin','Staff'],
         },
         {
-            icon: <FaUser />,
-            label: 'User Profile',
+            icon: <PiProjectorScreenFill />,
+            label: 'Ghế',
             to: '/admin/profile',
-            roles: ['Admin'],
+            roles: ['Admin', 'Staff'],
         },
     ];
 

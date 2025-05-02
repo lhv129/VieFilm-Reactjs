@@ -10,7 +10,9 @@ const AdminHeader = ({ setSidebarOpen }) => {
     const userMenuRef = useRef();
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
-    
+
+    const cinemaStor = JSON.parse(localStorage.getItem('cinema') || 'null');
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -43,7 +45,9 @@ const AdminHeader = ({ setSidebarOpen }) => {
             {user.roleName === 'Admin' ? (
                 <ModalSelect />
             ) : (
-                <div className="flex-1" />
+                <div className="flex">
+                    <span className="font-semibold text-gray-800 hidden sm:inline text-[10px]">Rạp: {cinemaStor.name}</span>
+                </div>
             )}
 
             <div className="flex items-center space-x-4 relative mt-2 lg:mt-0" ref={userMenuRef}>

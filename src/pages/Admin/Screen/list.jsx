@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, message, Modal } from 'antd';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { getAllByCinema } from "@apis/screenService";
+import { getAllByCinema, deleteScreen } from "@apis/screenService";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
@@ -9,11 +9,13 @@ function Province() {
     const [screens, setScreens] = useState([]);
     const [loading, setLoading] = useState(true);
     const [messageApi, contextHolder] = message.useMessage();
+    const [cinemaIdS, setCinemaId] = useState('');
 
     useEffect(() => {
         const fetchData = () => {
             const storedCin = JSON.parse(localStorage.getItem('cinema') || 'null');
             const cinemaId = storedCin?._id;
+            setCinemaId(cinemaId)
 
             if (cinemaId) {
                 setLoading(true);
@@ -48,6 +50,7 @@ function Province() {
         };
     }, []);
 
+
     const showDeleteConfirm = (screen) => {
         Modal.confirm({
             title: 'Bạn có chắc muốn xóa phòng chiếu này?',
@@ -56,7 +59,13 @@ function Province() {
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                deleteScreen(screen.screenCode).then(() => {
+
+                let body = {
+                    cinemaId: cinemaIdS,
+                    screenId: screen._id
+                }
+
+                deleteScreen(body).then(() => {
                     message.success("Xóa thành công");
                     setScreens(prev => prev.filter(item => item._id !== screen._id));
                 }).catch(() => message.error("Xóa thất bại"));
@@ -79,7 +88,7 @@ function Province() {
             render: (_, record) => (
                 <div className="flex gap-2">
                     {/* Ẩn nút, hiện icon khi responsive */}
-                    <Link to={`/admin/rap/${record._id}/chinh-sua`}>
+                    <Link to={`/admin/phong-chieu/${record._id}/chinh-sua`}>
                         <button className="hidden sm:inline-block px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 cursor-pointer">
                             Sửa
                         </button>
@@ -89,7 +98,7 @@ function Province() {
                     </button>
 
                     {/* Icon hiển thị trên mobile */}
-                    <Link to={`/admin/rap/${record._id}/chinh-sua`}>
+                    <Link to={`/admin/phong-chieu/${record._id}/chinh-sua`}>
                         <button className="sm:hidden text-yellow-500 hover:text-yellow-700 cursor-pointer">
                             <FaEdit />
                         </button>
