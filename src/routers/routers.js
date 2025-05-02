@@ -51,6 +51,39 @@ const routers = [
         isOnlyAdmin: true,
     },
     {
+        path: '/admin/rap',
+        component: lazy(() => import("@pages/Admin/Cinema/list")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/rap/them-moi',
+        component: lazy(() => import("@pages/Admin/Cinema/create")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/rap/:slug/chinh-sua',
+        component: lazy(() => import("@pages/Admin/Cinema/edit")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/phong-chieu',
+        component: lazy(() => import("@pages/Admin/Screen/list")),
+        isAdmin: true,
+    },
+    {
+        path: '/admin/phong-chieu/them-moi',
+        component: lazy(() => import("@pages/Admin/Screen/create")),
+        isAdmin: true,
+    },
+    {
+        path: '/admin/phong-chieu/:id/chinh-sua',
+        component: lazy(() => import("@pages/Admin/Screen/edit")),
+        isAdmin: true,
+    },
+    {
         path: '*',
         component: lazy(() => import("@pages/404NotFound/NotFound")),
     },

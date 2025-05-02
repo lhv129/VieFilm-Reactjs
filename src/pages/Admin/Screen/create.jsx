@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Helmet } from "react-helmet";
-import { Button, Checkbox, Form, Input, message } from 'antd';
-import { create } from "@apis/provinceService";
+import { Button, Form, Input, message } from 'antd';
+import { createScreen } from "@apis/screenService";
 import { useNavigate } from "react-router-dom";
 
 
@@ -13,9 +13,17 @@ const createProvince = () => {
     const onFinish = async (values) => {
         const { name } = values;
         try {
-            const res = await create({name});
+            const storedCinema = localStorage.getItem("cinema");
+            const parsedProvince = storedCinema ? JSON.parse(storedCinema) : null;
+
+            const data = {
+                name:name,
+                cinemaId: parsedProvince._id
+            }
+
+            const res = await createScreen(data);
             message.success(res.data.message);
-            navigate("/admin/tinh-thanh");
+            navigate("/admin/phong-chieu");
         } catch (err) {
             if (err.response) {
                 messageApi.open({
@@ -49,9 +57,9 @@ const createProvince = () => {
             >
                 {contextHolder}
                 <Form.Item
-                    label="Tỉnh thành"
+                    label="Tên phòng chiếu"
                     name="name"
-                    rules={[{ required: true, message: 'Vui lòng nhập tỉnh thành!' }]}
+                    rules={[{ required: true, message: 'Vui lòng nhập tên phòng chiếu!' }]}
                 >
                     <Input />
                 </Form.Item>

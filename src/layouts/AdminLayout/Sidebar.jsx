@@ -7,6 +7,8 @@ import {
     FaTimes,
     FaMapMarkerAlt,
 } from 'react-icons/fa';
+import { RiMovie2AiFill } from "react-icons/ri";
+import { BiSolidCameraMovie } from "react-icons/bi";
 import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,7 +22,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             icon: <FaChartBar />,
             label: 'Thống kê',
             to: '/admin/thong-ke',
-            roles: ['Admin', 'Staff'],
+            roles: ['Admin'],
         },
         {
             icon: <FaMapMarkerAlt />,
@@ -29,16 +31,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             roles: ['Admin'],
         },
         {
-            icon: <FaCalendar />,
-            label: 'Calendar',
-            to: '/admin/calendar',
+            icon: <RiMovie2AiFill />,
+            label: 'Rạp',
+            to: '/admin/rap',
             roles: ['Admin'],
         },
         {
-            icon: <FaTasks />,
-            label: 'Task',
-            to: '/admin/tasks',
-            roles: ['Admin'],
+            icon: <BiSolidCameraMovie />,
+            label: 'Phòng chiếu',
+            to: '/admin/phong-chieu',
+            roles: ['Admin','Staff'],
         },
         {
             icon: <FaUser />,
