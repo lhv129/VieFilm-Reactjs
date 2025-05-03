@@ -165,10 +165,10 @@ function Booking() {
 
                     <div className="w-full overflow-x-auto">
                         {/* Màn hình */}
-                        <div className="min-w-[900px] mb-8 mt-8">
+                        <div className="min-w-[800px] mb-8 mt-8">
                             <img src="/images/showtimes/ic-screen.png" />
                         </div>
-                        <div className="inline-block min-w-[900px]">
+                        <div className="inline-block min-w-[800px]">
                             <div className="flex justify-center">
                                 <div className="w-full space-y-2 mb-8">
                                     {Object.entries(

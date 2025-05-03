@@ -63,9 +63,9 @@ function Seat({ seats = [], selectedSeats = [], fetchSeats }) {
     };
 
     return (
-        <div className="w-full overflow-x-auto justify-center">
-            <div className="inline-block min-w-[900px]">
-                <img src="/images/showtimes/ic-screen.png" alt="screen" />
+        <div className="w-full overflow-x-auto text-center">
+            <div className="inline-block min-w-[800px]">
+                <img src="/images/showtimes/ic-screen.png" alt="screen" className="w-200"/>
                 <div className="w-full space-y-2 mb-8">
                     {Object.entries(seatRows)
                         .sort(([a], [b]) => a.localeCompare(b))
