@@ -84,6 +84,11 @@ const routers = [
         isAdmin: true,
     },
     {
+        path: '/admin/phong-chieu/:screenId/so-do-ghe',
+        component: lazy(() => import("@pages/Admin/Seat/list")),
+        isAdmin: true,
+    },
+    {
         path: '*',
         component: lazy(() => import("@pages/404NotFound/NotFound")),
     },

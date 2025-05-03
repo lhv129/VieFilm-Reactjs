@@ -78,9 +78,14 @@ function Province() {
 
     const columns = [
         {
-            title: 'Rạp phim',
+            title: 'Phòng chiếu',
             dataIndex: 'name',
             key: 'name',
+        },
+        {
+            title: 'Mã rạp',
+            dataIndex: 'screenCode',
+            key: 'screenCode',
         },
         {
             title: 'Hành động',
@@ -103,10 +108,29 @@ function Province() {
                             <FaEdit />
                         </button>
                     </Link>
-
                     <button onClick={() => showDeleteConfirm(record)} className="sm:hidden text-red-500 hover:text-red-700 cursor-pointer">
                         <FaTrash />
                     </button>
+                </div>
+            ),
+        },
+        {
+            title: 'Sơ đồ ghế',
+            key: 'action',
+            render: (_, record) => (
+                <div className="flex gap-2">
+                    {/* Ẩn nút, hiện icon khi responsive */}
+                    <Link to={`/admin/phong-chieu/${record._id}/so-do-ghe`}>
+                        <button className="hidden sm:inline-block px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer">
+                            Xem
+                        </button>
+                    </Link>
+                    {/* Icon hiển thị trên mobile */}
+                    <Link to={`/admin/phong-chieu/${record._id}/so-do-ghe`}>
+                        <button className="sm:hidden text-green-500 hover:text-green-700 cursor-pointer">
+                            <FaEdit />
+                        </button>
+                    </Link>
                 </div>
             ),
         },

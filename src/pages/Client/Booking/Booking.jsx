@@ -86,36 +86,36 @@ function Booking() {
     const getSeatClass = (seat) => {
         if (seat.isBooked === "paid" || seat.isBooked === "used") {
             if (seat.type === "Ghế thường") {
-                return "bg-[url('/images/showtimes/seats/seat-error-normal.png')] bg-cover bg-center cursor-not-allowed text-white";
+                return "bg-[url('/images/showtimes/seats/seat-error-normal.png')] bg-cover bg-center cursor-not-allowed text-white w-8 h-8";
             }
             if (seat.type === "Ghế VIP") {
-                return "bg-[url('/images/showtimes/seats/seat-error-vip.png')] bg-cover bg-center cursor-not-allowed text-white";
+                return "bg-[url('/images/showtimes/seats/seat-error-vip.png')] bg-cover bg-center cursor-not-allowed text-white w-8 h-8";
             }
             if (seat.type === "Ghế đôi") {
-                return "bg-[url('/images/showtimes/seats/seat-error-double.png')] bg-cover bg-center cursor-not-allowed text-white";
+                return "bg-[url('/images/showtimes/seats/seat-error-double.png')] bg-cover bg-center cursor-not-allowed text-white w-18 h-9";
             }
         }
 
         if (selectedSeats.includes(seat.seatCode)) {
             if (seat.type === "Ghế thường") {
-                return "bg-[url('/images/showtimes/seats/seat-select-normal.png')] bg-cover bg-center cursor-pointer";
+                return "bg-[url('/images/showtimes/seats/seat-select-normal.png')] bg-cover bg-center cursor-pointer w-8 h-8";
             }
             if (seat.type === "Ghế VIP") {
-                return "bg-[url('/images/showtimes/seats/seat-select-vip.png')] bg-cover bg-center cursor-pointer";
+                return "bg-[url('/images/showtimes/seats/seat-select-vip.png')] bg-cover bg-center cursor-pointer w-8 h-8";
             }
             if (seat.type === "Ghế đôi") {
-                return "bg-[url('/images/showtimes/seats/seat-select-double.png')] bg-cover bg-center cursor-pointer";
+                return "bg-[url('/images/showtimes/seats/seat-select-double.png')] bg-cover bg-center cursor-pointer w-18 h-9";
             }
         }
 
         if (seat.type === "Ghế thường") {
-            return "bg-[url('/images/showtimes/seats/seatnormal.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer";
+            return "bg-[url('/images/showtimes/seats/seatnormal.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer w-8 h-8";
         }
         if (seat.type === "Ghế VIP") {
-            return "bg-[url('/images/showtimes/seats/Seat.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer";
+            return "bg-[url('/images/showtimes/seats/Seat.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer w-8 h-8";
         }
         if (seat.type === "Ghế đôi") {
-            return "bg-[url('/images/showtimes/seats/seatcouple.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer";
+            return "bg-[url('/images/showtimes/seats/seatcouple.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer w-18 h-9";
         }
     };
 
@@ -186,22 +186,36 @@ function Booking() {
                                                     const bNum = parseInt(b.seatCode.match(/\d+$/)[0]);
                                                     return aNum - bNum;
                                                 })
-                                                .map((seat) => (
-                                                    <div
-                                                        key={seat.seatCode}
-                                                        className={`w-8 h-8 flex items-center justify-center text-[10px] rounded-md ${getSeatClass(seat)}`}
-                                                        onClick={() => {
-                                                            if (!seat.isBooked) toggleSeat(seat.seatCode);
-                                                        }}
-                                                    >
-                                                        {seat.seatCode}
-                                                    </div>
-                                                ))}
+                                                .map((seat) => {
+                                                    // Nếu ghế hỏng, hiển thị khung trống giữ vị trí
+                                                    if (seat.status === 'broken') {
+                                                        return (
+                                                            <div
+                                                                key={seat.seatCode}
+                                                                className="w-8 h-8 rounded-md"
+                                                                title="Ghế hỏng"
+                                                            />
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <div
+                                                            key={seat.seatCode}
+                                                            className={`flex items-center justify-center text-[10px] rounded-md ${getSeatClass(seat)}`}
+                                                            onClick={() => {
+                                                                if (!seat.isBooked) toggleSeat(seat.seatCode);
+                                                            }}
+                                                        >
+                                                            {seat.seatCode}
+                                                        </div>
+                                                    );
+                                                })}
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     {/* Tổng kết */}
