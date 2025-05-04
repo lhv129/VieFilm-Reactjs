@@ -5,7 +5,7 @@ import { createScreen } from "@apis/screenService";
 import { useNavigate } from "react-router-dom";
 
 
-const createProvince = () => {
+const create = () => {
 
     const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
@@ -74,4 +74,4 @@ const createProvince = () => {
     )
 }
 
-export default createProvince;
+export default create;

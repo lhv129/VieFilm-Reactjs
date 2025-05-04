@@ -89,6 +89,21 @@ const routers = [
         isAdmin: true,
     },
     {
+        path: '/admin/suat-chieu',
+        component: lazy(() => import("@pages/Admin/Showtime/list")),
+        isAdmin: true,
+    },
+    {
+        path: '/admin/suat-chieu/them-moi',
+        component: lazy(() => import("@pages/Admin/Showtime/create")),
+        isAdmin: true,
+    },
+    {
+        path: '/admin/suat-chieu/:id/chinh-sua',
+        component: lazy(() => import("@pages/Admin/Showtime/edit")),
+        isAdmin: true,
+    },
+    {
         path: '*',
         component: lazy(() => import("@pages/404NotFound/NotFound")),
     },

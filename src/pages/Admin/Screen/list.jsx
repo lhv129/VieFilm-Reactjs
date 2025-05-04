@@ -5,7 +5,7 @@ import { getAllByCinema, deleteScreen } from "@apis/screenService";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
-function Province() {
+function list() {
     const [screens, setScreens] = useState([]);
     const [loading, setLoading] = useState(true);
     const [messageApi, contextHolder] = message.useMessage();
@@ -161,4 +161,4 @@ function Province() {
     );
 }
 
-export default Province;
+export default list;

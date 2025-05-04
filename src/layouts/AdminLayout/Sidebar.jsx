@@ -42,8 +42,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         },
         {
             icon: <PiProjectorScreenFill />,
-            label: 'Ghế',
-            to: '/admin/profile',
+            label: 'Suất chiếu',
+            to: '/admin/suat-chieu',
             roles: ['Admin', 'Staff'],
         },
     ];
