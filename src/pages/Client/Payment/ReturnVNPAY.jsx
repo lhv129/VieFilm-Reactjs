@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { returnVNPAY } from "@apis/ticketService";
 import { AlertTriangle, CheckCircle } from "lucide-react";
+import TicketCard from "@components/TicketCard/TicketCard";
 
 function ReturnVNPAY() {
     const [loading, setLoading] = useState(true);
@@ -18,6 +19,8 @@ function ReturnVNPAY() {
         const fetchData = async () => {
             try {
                 const res = await returnVNPAY();
+
+                console.log(res);
 
                 Cookies.remove("bookingStep");
                 Cookies.remove(`holdSeats-${showtimeId}`);
@@ -57,18 +60,9 @@ function ReturnVNPAY() {
     }
 
     if (ticketData) {
-        return (
-            <div className="max-w-xl mx-auto mt-10 p-4 border rounded shadow-md bg-white">
-                <div className="flex items-center text-green-600 mb-4">
-                    <CheckCircle className="w-6 h-6 mr-2" />
-                    <h2 className="text-xl font-semibold">Thanh toán thành công</h2>
-                </div>
-                <pre className="bg-gray-100 p-2 rounded text-sm text-left overflow-auto">
-                    {JSON.stringify(ticketData, null, 2)}
-                </pre>
-            </div>
-        );
+        return <TicketCard ticketData={ticketData}/>;
     }
+
 
     if (isError) {
         return (

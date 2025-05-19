@@ -31,6 +31,7 @@ function Booking() {
     const [selectedProducts, setSelectedProducts] = useState([]);
     const pollingRef = useRef(null);
     const [promoName, setPromoName] = useState("");
+    const initialLoadDone = useRef(false);
 
     const holdSeatsKey = `holdSeats-${showtimeId}`;
 
@@ -51,10 +52,16 @@ function Booking() {
                 setSeats(sortedSeats);
                 setShowtime(res.data);
 
-                const myHeldSeats = sortedSeats
-                    .filter((s) => s.isBooked === "hold" && s.bookedBy === user?._id)
-                    .map((s) => s.seatCode);
-                setSelectedSeats(myHeldSeats);
+                // Chỉ cập nhật selectedSeats nếu đây là lần đầu load (không phải polling)
+                // Bạn có thể kiểm tra bằng biến state hoặc ref
+                // Ví dụ dùng một ref để đánh dấu lần đầu fetch
+                if (!initialLoadDone.current) {
+                    const myHeldSeats = sortedSeats
+                        .filter((s) => s.isBooked === "hold" && s.bookedBy === user?._id)
+                        .map((s) => s.seatCode);
+                    setSelectedSeats(myHeldSeats);
+                    initialLoadDone.current = true;
+                }
 
                 const movieId = res.data.movieId;
                 return getOneById(movieId);
@@ -225,6 +232,18 @@ function Booking() {
             setShowTermsModal(true);
         }
     };
+
+    useEffect(() => {
+        if (step !== "select-seat") return;
+
+        // Polling every 3 seconds
+        const intervalId = setInterval(() => {
+            fetchSeats();
+        }, 3000);
+
+        // Clean up on step change or unmount
+        return () => clearInterval(intervalId);
+    }, [step, showtimeId, user]);
 
     return (
         <>
