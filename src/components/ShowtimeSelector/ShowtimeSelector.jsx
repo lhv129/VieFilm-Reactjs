@@ -94,7 +94,7 @@ const ShowtimeSelector = ({ showtimes }) => {
                                     }`}
                                 disabled={isPast}
                                 onClick={() =>
-                                    !isPast && navigate('/dat-ve/chon-ghe', {
+                                    !isPast && navigate('/dat-ve', {
                                         state: { showtimeId: showtime._id }
                                     })
                                 }

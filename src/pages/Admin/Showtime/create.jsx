@@ -39,28 +39,29 @@ const Create = () => {
     }, []);
 
     const onFinish = async (values) => {
-        const { movieId, screenId, date, time } = values;
+        const { movieId, screenId, date, times } = values;
         const cinema = JSON.parse(localStorage.getItem("cinema") || "{}");
 
-        const payload = {
+        const payloads = times.map(time => ({
             movieId,
             screenId,
             cinemaId: cinema._id,
             date: dayjs(date).format("DD/MM/YYYY"),
-            startTime: dayjs(time).format("HH:mm")
-        };
+            startTime: time
+        }));
 
         try {
-            const res = await createShowtime(payload);
-            message.success(res.data.message);
+            // Gửi từng suất chiếu (hoặc dùng Promise.all nếu API chịu được)
+            for (const payload of payloads) {
+                await createShowtime(payload);
+            }
+            message.success("Tạo nhiều suất chiếu thành công!");
             navigate("/admin/suat-chieu");
         } catch (err) {
-            messageApi.open({
-                type: "error",
-                content: err?.response?.data?.message || "Lỗi tạo suất chiếu",
-            });
+            message.error(err?.response?.data?.message || "Lỗi tạo suất chiếu");
         }
     };
+
 
     const handleSelectChange = async (value, type) => {
         if (type === "movieId") {
@@ -129,10 +130,28 @@ const Create = () => {
 
                     <Form.Item
                         label="Giờ chiếu"
-                        name="time"
-                        rules={[{ required: true, message: "Vui lòng chọn giờ" }]}>
-                        <TimePicker format="HH:mm" style={{ width: "100%" }} onChange={handleTimeChange} />
+                        name="times"
+                        rules={[{ required: true, message: "Vui lòng chọn ít nhất một giờ" }]}
+                    >
+                        <Select
+                            mode="multiple"
+                            placeholder="Chọn nhiều giờ chiếu"
+                            style={{ width: "100%" }}
+                            onChange={setTime}
+                        >
+                            {Array.from({ length: 24 }, (_, hour) =>
+                                ["00", "15", "30", "45"].map(min => {
+                                    const time = `${hour.toString().padStart(2, "0")}:${min}`;
+                                    return (
+                                        <Select.Option key={time} value={time}>
+                                            {time}
+                                        </Select.Option>
+                                    );
+                                })
+                            ).flat()}
+                        </Select>
                     </Form.Item>
+
 
 
                     <Form.Item className="flex gap-4">
@@ -156,8 +175,10 @@ const Create = () => {
                     {date && (
                         <p><strong>📅 Ngày chiếu:</strong> {dayjs(date).format("DD/MM/YYYY")}</p>
                     )}
-                    {time && (
-                        <p><strong>🕐 Giờ chiếu:</strong> {dayjs(time).format("HH:mm")}</p>
+                    {Array.isArray(time) && time.length > 0 && (
+                        <p>
+                            <strong>🕐 Giờ chiếu:</strong> {time.join(", ")}
+                        </p>
                     )}
                 </div>
 

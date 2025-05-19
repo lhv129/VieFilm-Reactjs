@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getSeats } from "@apis/showtimeService";
 import { getOneById } from "@apis/movieService";
-import Preloader from "@components/Preloader/Preloader";
 import { Helmet } from "react-helmet";
-
+import { holdSeats, deleteHoldSeats, checkOut } from "@apis/ticketService";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import MovieInfo from "./MovieInfo";
+import SelectSeat from "./SelectSeat";
+import Checkout from "./Checkout";
 
 function Booking() {
     const location = useLocation();
@@ -13,121 +18,213 @@ function Booking() {
     const { showtimeId } = location.state || {};
     const [seats, setSeats] = useState([]);
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const [timeLeft, setTimeLeft] = useState(600); // 600 giây = 10 phút
+    const [timeLeft, setTimeLeft] = useState(600);
     const [movie, setMovie] = useState(null);
     const [showtime, setShowtime] = useState([]);
-    const [minWidth, setMinWidth] = useState(900);
+    const storedCinema = localStorage.getItem("cinema");
+    const parsedCinema = storedCinema ? JSON.parse(storedCinema) : null;
+    const { user } = useAuth();
+    const [isHolding, setIsHolding] = useState(false);
+    const [step, setStep] = useState(() => Cookies.get("bookingStep") || "select-seat");
+    const [showTermsModal, setShowTermsModal] = useState(false);
+    const [agreed, setAgreed] = useState(false);
+    const [selectedProducts, setSelectedProducts] = useState([]);
+    const pollingRef = useRef(null);
+    const [promoName, setPromoName] = useState("");
 
-    useEffect(() => {
-        if (showtimeId) {
+    const holdSeatsKey = `holdSeats-${showtimeId}`;
 
-            setIsLoading(true);
-
-            getSeats(showtimeId)
-                .then((res) => {
-                    const seatsData = res.data.screen.seats;
-                    const sortedSeats = seatsData.sort((a, b) => {
-                        const [rowA, colA] = [a.seatCode.charAt(0), parseInt(a.seatCode.slice(1))];
-                        const [rowB, colB] = [b.seatCode.charAt(0), parseInt(b.seatCode.slice(1))];
-
-                        if (rowA < rowB) return -1;
-                        if (rowA > rowB) return 1;
-                        return colA - colB;
-                    });
-
-                    setSeats(sortedSeats);
-
-                    setShowtime(res.data);
-
-                    const movieId = res.data.movieId;
-                    return getOneById(movieId);
-                })
-                .then((res) => {
-                    setMovie(res.data); // lấy data phim
-                })
-                .catch((err) => {
-                    console.error("Error fetching seats or movie", err);
-                }).finally(() => {
-                    setIsLoading(false);
+    const fetchSeats = () => {
+        if (!showtimeId) return;
+        setIsLoading(true);
+        getSeats(showtimeId)
+            .then((res) => {
+                const seatsData = res.data.screen.seats;
+                const sortedSeats = seatsData.sort((a, b) => {
+                    const [rowA, colA] = [a.seatCode.charAt(0), parseInt(a.seatCode.slice(1))];
+                    const [rowB, colB] = [b.seatCode.charAt(0), parseInt(b.seatCode.slice(1))];
+                    if (rowA < rowB) return -1;
+                    if (rowA > rowB) return 1;
+                    return colA - colB;
                 });
-        }
-    }, [showtimeId]);
+
+                setSeats(sortedSeats);
+                setShowtime(res.data);
+
+                const myHeldSeats = sortedSeats
+                    .filter((s) => s.isBooked === "hold" && s.bookedBy === user?._id)
+                    .map((s) => s.seatCode);
+                setSelectedSeats(myHeldSeats);
+
+                const movieId = res.data.movieId;
+                return getOneById(movieId);
+            })
+            .then((res) => {
+                setMovie(res.data);
+            })
+            .catch((err) => {
+                console.error("Error fetching seats or movie", err);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
 
     useEffect(() => {
-        if (timeLeft <= 0) {
-            alert("Hết thời gian giữ ghế! Vui lòng chọn lại.");
-            navigate(-1);
-            return;
+        if (!showtimeId) return;
+
+        // Đọc cookie để khôi phục thời gian còn lại và ghế đã giữ (nếu có)
+        try {
+            const holdSeatsData = JSON.parse(Cookies.get(holdSeatsKey) || "[]");
+            if (holdSeatsData.length > 0 && holdSeatsData[0].expireAt) {
+                const expireTimestamp = new Date(holdSeatsData[0].expireAt).getTime();
+                const now = Date.now();
+                const diffSeconds = Math.floor((expireTimestamp - now) / 1000);
+
+                if (diffSeconds > 0) {
+                    setTimeLeft(diffSeconds);
+                    setSelectedSeats(holdSeatsData.map((s) => s.seatCode));
+                } else {
+                    Cookies.remove(holdSeatsKey);
+                    setTimeLeft(0);
+                    toast.error("Thời gian giữ ghế đã hết, vui lòng chọn lại");
+                    navigate("/");
+                }
+            }
+        } catch (error) {
+            console.error("Lỗi khi đọc holdSeats cookie", error);
         }
-        const timer = setInterval(() => {
-            setTimeLeft((prev) => prev - 1);
-        }, 1000);
-        return () => clearInterval(timer);
-    }, [timeLeft, navigate]);
+
+        fetchSeats();
+    }, [showtimeId, user, navigate]);
+
+
 
     const toggleSeat = (seatCode) => {
-        if (selectedSeats.includes(seatCode)) {
-            setSelectedSeats(selectedSeats.filter((code) => code !== seatCode));
-        } else {
-            setSelectedSeats([...selectedSeats, seatCode]);
-        }
+        if (isHolding) return;
+        const seat = seats.find((s) => s.seatCode === seatCode);
+        if (!seat) return;
+
+        const isSelected = selectedSeats.includes(seatCode);
+        const newSelectedSeats = isSelected
+            ? selectedSeats.filter((code) => code !== seatCode)
+            : [...selectedSeats, seatCode];
+        setSelectedSeats(newSelectedSeats);
+
+        const seatIds = newSelectedSeats
+            .map((code) => seats.find((s) => s.seatCode === code))
+            .filter(Boolean)
+            .map((seat) => seat._id);
+
+        const data = { showtimeId, seatIds };
+
+        setIsHolding(true);
+        holdSeats(data)
+            .then((res) => {
+                const holdData = res.data.data;
+                if (holdData?.length > 0 && holdData[0].expireAt) {
+                    Cookies.set(holdSeatsKey, JSON.stringify(holdData), { expires: 1 / 144 });
+                    const expireTimestamp = new Date(holdData[0].expireAt).getTime();
+                    const now = Date.now();
+                    const diffSeconds = Math.floor((expireTimestamp - now) / 1000);
+                    setTimeLeft(diffSeconds > 0 ? diffSeconds : 0);
+                }
+            })
+            .catch((err) => {
+                toast.error(err?.response?.data?.message || "Lỗi giữ ghế", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    theme: "colored",
+                });
+            })
+            .finally(() => {
+                fetchSeats();
+                setIsHolding(false);
+            });
     };
+
+    useEffect(() => {
+        if (timeLeft <= 0) return;
+
+        const timer = setInterval(() => {
+            setTimeLeft((prev) => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [timeLeft]);
+
+    useEffect(() => {
+        if (timeLeft === 0) {
+            toast.error("Hết thời gian giữ ghế, vui lòng chọn lại", {
+                position: "top-right",
+                autoClose: 3000,
+                theme: "colored",
+            });
+
+            let holdSeatsData = null;
+            try {
+                holdSeatsData = JSON.parse(Cookies.get(holdSeatsKey) || "[]");
+            } catch (error) {
+                console.error("Invalid holdSeats cookie", error);
+            }
+
+            const ticketId = Array.isArray(holdSeatsData) && holdSeatsData.length > 0 ? holdSeatsData[0]._id : null;
+
+            const cleanUpAndGoBack = () => {
+                Cookies.remove(holdSeatsKey);
+                Cookies.remove("bookingStep");
+                navigate("/");
+            };
+
+            if (ticketId) {
+                deleteHoldSeats({ ticketId })
+                    .catch((err) => {
+                        console.error("Lỗi xóa vé giữ:", err);
+                    })
+                    .finally(() => {
+                        cleanUpAndGoBack();
+                    });
+            } else {
+                cleanUpAndGoBack();
+            }
+        }
+    }, [timeLeft, navigate]);
+
+    useEffect(() => {
+        Cookies.set("bookingStep", step, { expires: 1 / 144 });
+    }, [step]);
+
+    useEffect(() => {
+        const pathnameWhenMounted = window.location.pathname;
+        return () => {
+            if (pathnameWhenMounted === "/dat-ve") {
+                Cookies.remove("bookingStep");
+            }
+        };
+    }, []);
 
     const handleContinue = () => {
         if (selectedSeats.length === 0) {
-            alert("Bạn chưa chọn ghế nào!");
+            toast.error("Vui lòng chọn ghế", {
+                position: "top-right",
+                autoClose: 3000,
+                theme: "colored",
+            });
             return;
         }
-        navigate("/dat-ve/thanh-toan", {
-            state: { showtimeId, selectedSeats },
-        });
-    };
 
-    const getSeatClass = (seat) => {
-        if (seat.isBooked === "paid" || seat.isBooked === "used") {
-            if (seat.type === "Ghế thường") {
-                return "bg-[url('/images/showtimes/seats/seat-error-normal.png')] bg-cover bg-center cursor-not-allowed text-white w-8 h-8";
-            }
-            if (seat.type === "Ghế VIP") {
-                return "bg-[url('/images/showtimes/seats/seat-error-vip.png')] bg-cover bg-center cursor-not-allowed text-white w-8 h-8";
-            }
-            if (seat.type === "Ghế đôi") {
-                return "bg-[url('/images/showtimes/seats/seat-error-double.png')] bg-cover bg-center cursor-not-allowed text-white w-18 h-9";
-            }
-        }
-
-        if (selectedSeats.includes(seat.seatCode)) {
-            if (seat.type === "Ghế thường") {
-                return "bg-[url('/images/showtimes/seats/seat-select-normal.png')] bg-cover bg-center cursor-pointer w-8 h-8";
-            }
-            if (seat.type === "Ghế VIP") {
-                return "bg-[url('/images/showtimes/seats/seat-select-vip.png')] bg-cover bg-center cursor-pointer w-8 h-8";
-            }
-            if (seat.type === "Ghế đôi") {
-                return "bg-[url('/images/showtimes/seats/seat-select-double.png')] bg-cover bg-center cursor-pointer w-18 h-9";
-            }
-        }
-
-        if (seat.type === "Ghế thường") {
-            return "bg-[url('/images/showtimes/seats/seatnormal.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer w-8 h-8";
-        }
-        if (seat.type === "Ghế VIP") {
-            return "bg-[url('/images/showtimes/seats/Seat.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer w-8 h-8";
-        }
-        if (seat.type === "Ghế đôi") {
-            return "bg-[url('/images/showtimes/seats/seatcouple.png')] bg-cover bg-center hover:bg-blue-200 cursor-pointer w-18 h-9";
+        if (step === "select-seat") {
+            setStep("payment");
+        } else if (step === "payment") {
+            setShowTermsModal(true);
         }
     };
-
-    const formatTime = (seconds) => {
-        const min = Math.floor(seconds / 60).toString().padStart(2, "0");
-        const sec = (seconds % 60).toString().padStart(2, "0");
-        return `${min}:${sec}`;
-    };
-
-    if (isLoading) {
-        return <Preloader />;
-    }
 
     return (
         <>
@@ -135,140 +232,90 @@ function Booking() {
                 <title>Chọn ghế</title>
             </Helmet>
             <div className="container flex flex-col md:flex-row p-4">
-                {/* Khu vực chọn ghế */}
-                <div className="md:w-2/3 flex flex-col items-center p-4">
-                    {/* Countdown */}
-                    {/* <div className="text-center text-red-600 font-semibold mb-6">
-                        Thời gian giữ ghế còn lại: {formatTime(timeLeft)}
-                    </div> */}
-
-                    {/* {Banner thông báo} */}
-                    {movie?.ageRating !== 'P' && movie?.ageRating && (
-                        <div className="w-full py-1 bg-amber-200 text-center mt-8">
-                            {movie.ageRating === 'T13' && (
-                                <p className="text-xs text-red-500 font-bold">
-                                    Theo quy định của cục điện ảnh, phim này không dành cho khán giả dưới 13 tuổi
-                                </p>
-                            )}
-                            {movie.ageRating === 'T16' && (
-                                <p className="text-xs text-red-500 font-bold">
-                                    Theo quy định của cục điện ảnh, phim này không dành cho khán giả dưới 16 tuổi
-                                </p>
-                            )}
-                            {movie.ageRating === 'T18' && (
-                                <p className="text-xs text-red-500 font-bold">
-                                    Theo quy định của cục điện ảnh, phim này không dành cho khán giả dưới 18 tuổi
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    <div className="w-full overflow-x-auto">
-                        {/* Màn hình */}
-                        <div className="min-w-[800px] mb-8 mt-8">
-                            <img src="/images/showtimes/ic-screen.png" />
-                        </div>
-                        <div className="inline-block min-w-[800px]">
-                            <div className="flex justify-center">
-                                <div className="w-full space-y-2 mb-8">
-                                    {Object.entries(
-                                        seats.reduce((acc, seat) => {
-                                            const row = seat.seatCode.match(/^[A-Z]+/)[0]; // lấy chữ cái đầu (có thể là A, B... hay AA)
-                                            if (!acc[row]) acc[row] = [];
-                                            acc[row].push(seat);
-                                            return acc;
-                                        }, {})
-                                    ).map(([row, rowSeats]) => (
-                                        <div key={row} className="flex gap-2 justify-center">
-                                            {rowSeats
-                                                .sort((a, b) => {
-                                                    const aNum = parseInt(a.seatCode.match(/\d+$/)[0]);
-                                                    const bNum = parseInt(b.seatCode.match(/\d+$/)[0]);
-                                                    return aNum - bNum;
-                                                })
-                                                .map((seat) => {
-                                                    // Nếu ghế hỏng, hiển thị khung trống giữ vị trí
-                                                    if (seat.status === 'broken') {
-                                                        return (
-                                                            <div
-                                                                key={seat.seatCode}
-                                                                className="w-8 h-8 rounded-md"
-                                                                title="Ghế hỏng"
-                                                            />
-                                                        );
-                                                    }
-
-                                                    return (
-                                                        <div
-                                                            key={seat.seatCode}
-                                                            className={`flex items-center justify-center text-[10px] rounded-md ${getSeatClass(seat)}`}
-                                                            onClick={() => {
-                                                                if (!seat.isBooked) toggleSeat(seat.seatCode);
-                                                            }}
-                                                        >
-                                                            {seat.seatCode}
-                                                        </div>
-                                                    );
-                                                })}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    {/* Tổng kết */}
-                    <div className="text-center space-y-2 mb-6">
-                        <div>
-                            Ghế đã chọn:{" "}
-                            <span className="font-semibold">
-                                {selectedSeats.length > 0 ? selectedSeats.join(", ") : "Chưa chọn"}
-                            </span>
-                        </div>
-                        <div>
-                            Tổng tiền:{" "}
-                            <span className="font-bold text-green-600">
-                                {selectedSeats.length * 65000} VND
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Button tiếp tục */}
-                    <button
-                        className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
-                        onClick={handleContinue}
-                    >
-                        Tiếp tục
-                    </button>
-                </div>
-
-                {/* Khu vực thông tin phim */}
-                <div className="md:w-1/3 p-4 space-y-4">
-                    {movie && (
-                        <>
-                            <div className="flex">
-                                <div className="w-1/2">
-                                    <img
-                                        src={movie.poster}
-                                        alt={movie.title}
-                                        className="w-full rounded shadow-lg"
-                                    />
-                                </div>
-                                <div className="w-1/2 px-4">
-                                    <h2 className="text-xl font-bold text-[#337ab7]">{movie.title}</h2>
-                                    <p className="text-sm">Ngôn ngữ {movie.language}</p>
-                                </div>
-                            </div>
-                            <div>Thể loại: {movie.genres}</div>
-                            <div>Thời lượng: {movie.duration} phút</div>
-                            <div>Ngày chiếu: {showtime.date}</div>
-                            <div>Giờ chiếu: {showtime.startTime}</div>
-                            <div>Phòng chiếu: {showtime.screen.name}</div>
-                        </>
-                    )}
+                {step === "select-seat" && (
+                    <SelectSeat
+                        selectedSeats={selectedSeats}
+                        seats={seats}
+                        timeLeft={timeLeft}
+                        user={user}
+                        toggleSeat={toggleSeat}
+                    />
+                )}
+                {step === "payment" && (
+                    <Checkout
+                        timeLeft={timeLeft}
+                        user={user}
+                        selectedSeats={selectedSeats}
+                        seats={seats}
+                        onProductsChange={setSelectedProducts}
+                        onPromoChange={setPromoName}
+                    />
+                )}
+                <div className="md:w-1/3 bg-white shadow-md p-4 space-y-4">
+                    <MovieInfo
+                        movie={movie}
+                        parsedCinema={parsedCinema}
+                        showtime={showtime}
+                        selectedSeats={selectedSeats}
+                        handleContinue={handleContinue}
+                        goBackToSelectSeat={step === "payment" ? () => setStep("select-seat") : null}
+                    />
                 </div>
             </div>
+            {showTermsModal && (
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg w-full max-w-lg">
+                        <h2 className="text-xl font-bold mb-4">ĐIỀU KHOẢN THANH TOÁN</h2>
+                        <div className="max-h-[300px] overflow-y-auto text-sm space-y-2">
+                            <p><strong>1.</strong> Thẻ phải được kích hoạt chức năng thanh toán trực tuyến...</p>
+                            <p><strong>2.</strong> Vé đã thanh toán không hoàn, không đổi.</p>
+                            <p><strong>3.</strong> Trong vòng 30 phút sau khi thanh toán sẽ gửi Quý khách mã xác nhận thông tin vé/đơn hàng qua email.</p>
+                            <p><strong>4.</strong> VieFilm không chịu trách nhiệm nếu thông tin email/số điện thoại sai khiến Quý khách không nhận được mã xác nhận.</p>
+                        </div>
+                        <div className="flex items-center mt-4 gap-2">
+                            <input
+                                type="checkbox"
+                                id="agreeTerms"
+                                checked={agreed}
+                                onChange={() => setAgreed(!agreed)}
+                            />
+                            <label htmlFor="agreeTerms" className="text-sm">Tôi đồng ý với điều khoản</label>
+                        </div>
+                        <div className="mt-6 flex justify-end gap-2">
+                            <button onClick={() => setShowTermsModal(false)} className="px-4 py-2 bg-gray-300 rounded">
+                                Hủy
+                            </button>
+                            <button
+                                onClick={() => {
+                                    if (!agreed) {
+                                        toast.error("Bạn cần đồng ý với điều khoản", { autoClose: 3000 });
+                                        return;
+                                    }
+
+                                    const holdSeatsData = JSON.parse(Cookies.get(holdSeatsKey) || "[]");
+                                    const ticketId = holdSeatsData.length > 0 ? holdSeatsData[0]._id : null;
+
+                                    const data = {
+                                        ticketId,
+                                        products: selectedProducts,
+                                        paymentMethodId: "6806803aecea502ee1874bb5",
+                                        promoName
+                                    };
+
+                                    checkOut(data).then((res) => {
+                                        window.location.href = res.data.data;
+                                    });
+
+                                    setShowTermsModal(false);
+                                }}
+                                className="px-4 py-2 bg-blue-600 text-white rounded"
+                            >
+                                Thanh toán
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

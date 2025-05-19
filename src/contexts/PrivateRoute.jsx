@@ -4,9 +4,13 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from "@/contexts/AuthContext";
 
 const PrivateRoute = ({ children }) => {
-    const user = useAuth();
+    const { user, loading } = useAuth(); // 🟢 lấy cả loading
 
-    if (!user?.user) {
+    if (loading) {
+        return <div>Đang kiểm tra đăng nhập...</div>; // hoặc spinner của bạn
+    }
+
+    if (!user) {
         return <Navigate to="/tai-khoan" replace />;
     }
 

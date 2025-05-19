@@ -18,8 +18,13 @@ const routers = [
         component: lazy(() => import("@pages/Client/VerifyEmail/VerifyEmail")),
     },
     {
-        path: '/dat-ve/chon-ghe',
+        path: '/dat-ve',
         component: lazy(() => import("@pages/Client/Booking/Booking")),
+        isPrivate: true,
+    },
+    {
+        path: '/v1/tickets/vnpay-return',
+        component: lazy(() => import("@pages/Client/Payment/ReturnVNPAY")),
         isPrivate: true,
     },
     {
