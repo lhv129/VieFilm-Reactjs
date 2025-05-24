@@ -42,8 +42,8 @@ export default function ClientHeader() {
                 </div>
 
                 <nav className="hidden md:flex space-x-6 font-bold text-xs uppercase text-gray-800 w-2/3 justify-between">
-                    <a href="#" className="hover:hover:text-[#337ab7]">LỊCH CHIẾU THEO RẠP</a>
-                    <a href="#" className="hover:hover:text-[#337ab7]">PHIM</a>
+                    <Link to="/lich-chieu-theo-rap"><p className="hover:hover:text-[#337ab7]">LỊCH CHIẾU THEO RẠP</p></Link>
+                    <Link to="/phim"><p className="hover:hover:text-[#337ab7]">PHIM</p></Link>
                     <a href="#" className="hover:hover:text-[#337ab7]">RẠP</a>
                     <a href="#" className="hover:hover:text-[#337ab7]">GIÁ VÉ</a>
                     <a href="#" className="hover:hover:text-[#337ab7]">TIN MỚI VÀ ƯU ĐÃI</a>

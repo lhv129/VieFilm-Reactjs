@@ -59,4 +59,13 @@ const deleteShowtime = async (body) => {
     }
 }
 
-export { getAllByMovie, getSeats, getAll, createShowtime, getShowtimeById, updateShowtime, deleteShowtime };
+const getAllByDate = async (body) => {
+    try{
+        const res = await axiosClient.post("/showtimes/get-all-by-date",body);
+        return res.data;
+    }catch(error){
+        console.error("Lỗi khi gọi Api Movie");
+    }
+}
+
+export { getAllByMovie, getSeats, getAll, createShowtime, getShowtimeById, updateShowtime, deleteShowtime, getAllByDate };

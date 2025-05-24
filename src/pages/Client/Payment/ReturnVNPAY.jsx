@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { returnVNPAY } from "@apis/ticketService";
 import { AlertTriangle, CheckCircle } from "lucide-react";
 import TicketCard from "@components/TicketCard/TicketCard";
+import { Helmet } from "react-helmet";
 
 function ReturnVNPAY() {
     const [loading, setLoading] = useState(true);
@@ -60,17 +61,30 @@ function ReturnVNPAY() {
     }
 
     if (ticketData) {
-        return <TicketCard ticketData={ticketData}/>;
+        return (
+            <>
+                <Helmet>
+                    <title>Thanh toán</title>
+                </Helmet>
+                <TicketCard ticketData={ticketData} />;
+            </>
+        )
+
     }
 
 
     if (isError) {
         return (
-            <div className="flex flex-col items-center justify-center mt-10 text-red-600 animate-fade-in">
-                <AlertTriangle className="w-10 h-10 mb-2" />
-                <p className="text-lg font-medium">{message}</p>
-                <p className="text-sm text-gray-500 mt-2">Đang chuyển về trang chủ...</p>
-            </div>
+            <>
+                <Helmet>
+                    <title>Thanh toán</title>
+                </Helmet>
+                <div className="flex flex-col items-center justify-center mt-10 text-red-600 animate-fade-in">
+                    <AlertTriangle className="w-10 h-10 mb-2" />
+                    <p className="text-lg font-medium">{message}</p>
+                    <p className="text-sm text-gray-500 mt-2">Đang chuyển về trang chủ...</p>
+                </div>
+            </>
         );
     }
 

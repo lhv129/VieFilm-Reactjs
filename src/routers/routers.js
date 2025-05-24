@@ -28,6 +28,14 @@ const routers = [
         isPrivate: true,
     },
     {
+        path: '/phim',
+        component: lazy(() => import("@pages/Client/Movie/Movie")),
+    },
+    {
+        path: '/lich-chieu-theo-rap',
+        component: lazy(() => import("@pages/Client/Showtime/Showtime")),
+    },
+    {
         path: '/admin/thong-ke',
         component: lazy(() => import("@pages/Admin/Dashboardv2/Dashboard")),
         isAdmin: true,
