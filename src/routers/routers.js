@@ -36,6 +36,11 @@ const routers = [
         component: lazy(() => import("@pages/Client/Showtime/Showtime")),
     },
     {
+        path: '/thong-tin-tai-khoan',
+        component: lazy(() => import("@pages/Client/Profile/Profile")),
+        isPrivate: true,
+    },
+    {
         path: '/admin/thong-ke',
         component: lazy(() => import("@pages/Admin/Dashboardv2/Dashboard")),
         isAdmin: true,

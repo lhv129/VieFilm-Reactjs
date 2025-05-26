@@ -56,9 +56,9 @@ function AuthMenu() {
                         <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded shadow-lg z-50">
                             <ul className="text-sm text-gray-700">
                                 <li className="px-4 py-2 hover:bg-gray-100">
-                                    <Link to="/tai-khoan">👤 Thông tin tài khoản</Link>
+                                    <Link to="/thong-tin-tai-khoan">👤 Thông tin tài khoản</Link>
                                 </li>
-                                <li className="px-4 py-2 hover:bg-gray-100">
+                                {/* <li className="px-4 py-2 hover:bg-gray-100">
                                     <Link to="/the-thanh-vien">💳 Thẻ thành viên</Link>
                                 </li>
                                 <li className="px-4 py-2 hover:bg-gray-100">
@@ -66,9 +66,9 @@ function AuthMenu() {
                                 </li>
                                 <li className="px-4 py-2 hover:bg-gray-100">
                                     <Link to="/diem-beta">📌 Điểm Beta</Link>
-                                </li>
+                                </li> */}
                                 <li className="px-4 py-2 hover:bg-gray-100">
-                                    <Link to="/voucher">🎟️ Voucher của tôi</Link>
+                                    <Link to="/lich-su-mua-ve">🎟️ Lịch sử mua vé</Link>
                                 </li>
                                 <li className="px-4 py-2 hover:bg-gray-100 text-red-500 font-medium border-t border-gray-200">
                                     <button className="cursor-pointer" onClick={handleLogout}>🚪 Đăng xuất</button>

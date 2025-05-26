@@ -47,7 +47,7 @@ export default function ClientHeader() {
                     <a href="#" className="hover:hover:text-[#337ab7]">RẠP</a>
                     <a href="#" className="hover:hover:text-[#337ab7]">GIÁ VÉ</a>
                     <a href="#" className="hover:hover:text-[#337ab7]">TIN MỚI VÀ ƯU ĐÃI</a>
-                    <a href="#" className="hover:hover:text-[#337ab7]">THÀNH VIÊN</a>
+                    <a href="/thong-tin-tai-khoan" className="hover:hover:text-[#337ab7]">THÀNH VIÊN</a>
                 </nav>
 
                 <div className="md:hidden">

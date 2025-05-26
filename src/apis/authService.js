@@ -18,4 +18,16 @@ const verifyEmail = async (token) => {
     }
 }
 
-export { register, verifyEmail, sign }
+const updateProfile = async (body) => {
+    return await axiosClient.post('/auth/profile', body, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+}
+
+const changePassword = async (body) => {
+    return await axiosClient.post('/auth/change-password', body);
+}
+
+export { register, verifyEmail, sign, updateProfile,changePassword }
