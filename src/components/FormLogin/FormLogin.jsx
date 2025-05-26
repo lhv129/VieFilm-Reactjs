@@ -6,12 +6,19 @@ import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import ForgotPasswordModal from '@components/auth/ForgotPasswordModal';
+import ResetPasswordModal from '@components/auth/ResetPasswordModal';
+import { ReloadOutlined } from '@ant-design/icons';
+import { generateCaptcha } from "@/utils/generateCaptcha";
 
 const FormLogin = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { setUser } = useAuth();
+    const [showForgotModal, setShowForgotModal] = useState(false);
+    const [showResetModal, setShowResetModal] = useState(false);
+    const [captcha, setCaptcha] = useState('');
 
     const onFinish = async (values) => {
         if (isLoading) return;
@@ -55,6 +62,14 @@ const FormLogin = () => {
         console.log('Failed:', errorInfo);
     };
 
+    useEffect(() => {
+        setCaptcha(generateCaptcha());
+    }, []);
+
+    const refreshCaptcha = () => {
+        setCaptcha(generateCaptcha());
+    };
+
     return (
         <Form
             name="normal_login"
@@ -92,10 +107,67 @@ const FormLogin = () => {
                     placeholder="Mật khẩu"
                 />
             </Form.Item>
+
+            <Form.Item
+                required
+            >
+                <div className="flex gap-2 items-center align-c">
+                    <div
+                        className="px-4 py-1 border rounded text-lg font-mono tracking-widest select-none bg-gray-100"
+                        style={{
+                            backgroundImage: "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
+                            backgroundSize: "20px 20px",
+                            backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+                            userSelect: "none",
+                        }}
+                    >
+                        {captcha}
+                    </div>
+                    <ReloadOutlined
+                        onClick={refreshCaptcha}
+                        className="cursor-pointer text-xl text-blue-500 hover:text-blue-700 transition"
+                        title="Làm mới mã"
+                    />
+                    <Form.Item
+                        name="captcha"
+                        rules={[
+                            { required: true, message: "Nhập mã xác thực!" },
+                            {
+                                validator: (_, value) => {
+                                    if (!value || value === captcha) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error("Mã xác thực không đúng!"));
+                                },
+                            },
+                        ]}
+                        validateTrigger="onSubmit"
+                        style={{ marginTop: 25 }}
+                    >
+                        <Input
+                            placeholder="Nhập mã"
+                            style={{ width: 120 }}
+                        />
+                    </Form.Item>
+                </div>
+            </Form.Item>
+
             <Form.Item>
-                <a className="login-form-forgot" href="">
-                    Quên mật khẩu
-                </a>
+                <a onClick={() => setShowForgotModal(true)}>Quên mật khẩu</a>
+
+                <ForgotPasswordModal
+                    open={showForgotModal}
+                    onClose={() => setShowForgotModal(false)}
+                    onSuccess={() => {
+                        setShowForgotModal(false);
+                        setShowResetModal(true);
+                    }}
+                />
+
+                <ResetPasswordModal
+                    open={showResetModal}
+                    onClose={() => setShowResetModal(false)}
+                />
             </Form.Item>
 
             <Form.Item

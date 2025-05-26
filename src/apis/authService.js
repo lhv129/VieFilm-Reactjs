@@ -30,4 +30,12 @@ const changePassword = async (body) => {
     return await axiosClient.post('/auth/change-password', body);
 }
 
-export { register, verifyEmail, sign, updateProfile,changePassword }
+const sendTokenForgetPassword = async ({email}) => {
+    return await axiosClient.post('/auth/send-token-forget-password', {email:email});
+}
+
+const forgetPassword = async (body) => {
+    return await axiosClient.put('/auth/forget-password',body);
+}
+
+export { register, verifyEmail, sign, updateProfile, changePassword,sendTokenForgetPassword,forgetPassword }
