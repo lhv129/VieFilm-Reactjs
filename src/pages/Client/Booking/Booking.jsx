@@ -23,13 +23,13 @@ function Booking() {
     const [showtime, setShowtime] = useState([]);
     const storedCinema = localStorage.getItem("cinema");
     const parsedCinema = storedCinema ? JSON.parse(storedCinema) : null;
+    const cinemaId = parsedCinema?._id;
     const { user } = useAuth();
     const [isHolding, setIsHolding] = useState(false);
     const [step, setStep] = useState(() => Cookies.get("bookingStep") || "select-seat");
     const [showTermsModal, setShowTermsModal] = useState(false);
     const [agreed, setAgreed] = useState(false);
     const [selectedProducts, setSelectedProducts] = useState([]);
-    const pollingRef = useRef(null);
     const [promoName, setPromoName] = useState("");
     const initialLoadDone = useRef(false);
 
@@ -123,7 +123,7 @@ function Booking() {
             .filter(Boolean)
             .map((seat) => seat._id);
 
-        const data = { showtimeId, seatIds };
+        const data = { showtimeId, seatIds, cinemaId };
 
         setIsHolding(true);
         holdSeats(data)

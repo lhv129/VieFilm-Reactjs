@@ -6,15 +6,16 @@ import AuthMenu from "@components/Header/Client/AuthMenu/AuthMenu";
 
 export default function ClientHeader() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    
+
     const navItems = [
-        "LỊCH CHIẾU THEO RẠP",
-        "PHIM",
-        "RẠP",
-        "GIÁ VÉ",
-        "TIN MỚI VÀ ƯU ĐÃI",
-        "THÀNH VIÊN",
+        { label: "LỊCH CHIẾU THEO RẠP", path: "/lich-chieu-theo-rap" },
+        { label: "PHIM", path: "/phim" },
+        { label: "RẠP", path: "/rap" },
+        { label: "GIÁ VÉ", path: "/gia-ve" },
+        { label: "TIN MỚI VÀ ƯU ĐÃI", path: "/tin-moi-va-uu-dai" },
+        { label: "THÀNH VIÊN", path: "/thong-tin-tai-khoan" },
     ];
+
 
     return (
         <header className="w-full shadow-md">
@@ -47,7 +48,7 @@ export default function ClientHeader() {
                     <a href="#" className="hover:hover:text-[#337ab7]">RẠP</a>
                     <a href="#" className="hover:hover:text-[#337ab7]">GIÁ VÉ</a>
                     <a href="#" className="hover:hover:text-[#337ab7]">TIN MỚI VÀ ƯU ĐÃI</a>
-                    <a href="/thong-tin-tai-khoan" className="hover:hover:text-[#337ab7]">THÀNH VIÊN</a>
+                    <Link to="/thong-tin-tai-khoan"><p className="hover:hover:text-[#337ab7]">THÀNH VIÊN</p></Link>
                 </nav>
 
                 <div className="md:hidden">
@@ -60,18 +61,20 @@ export default function ClientHeader() {
             {/* Menu mobile */}
             <div
                 className={`container text-left md:hidden overflow-hidden transform transition-all duration-500 origin-top ${mobileMenuOpen ? 'scale-y-100 max-h-screen py-4' : 'scale-y-0 max-h-0 py-0'
-                    } bg-white px-6 border-t border-gray-200 z-50 font-semibold text-sm text-gray-800`}>
+                    } bg-white px-6 border-t border-gray-200 z-50 font-semibold text-sm text-gray-800`}
+            >
                 {navItems.map((item, idx) => (
-                    <a
-                        href="#"
+                    <Link
+                        to={item.path}
                         key={idx}
-                        className="block hover:text-[#337ab7]"
-                        style={{ marginBottom: "10px", marginTop: "10px" }}
+                        onClick={() => setMobileMenuOpen(false)} // đóng menu sau khi click
+                        className="block hover:text-[#337ab7] py-2"
                     >
-                        {item}
-                    </a>
+                        {item.label}
+                    </Link>
                 ))}
             </div>
+
         </header>
     );
 }

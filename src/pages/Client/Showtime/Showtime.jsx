@@ -53,7 +53,7 @@ function Showtime() {
             </Helmet>
             <div className="container">
                 {/* Date Selector */}
-                <div className="flex items-center border-b border-gray-300 mb-6 overflow-x-auto justify-center">
+                <div className="grid grid-cols-3 sm:flex items-center border-b border-gray-300 mb-6 justify-center">
                     {dates.map((date) => (
                         <button
                             key={date.fullDate}
