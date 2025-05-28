@@ -41,14 +41,32 @@ const routers = [
         isPrivate: true,
     },
     {
+        path: '/lich-su-mua-ve',
+        component: lazy(() => import("@pages/Client/Ticket/Ticket")),
+        isPrivate: true,
+    },
+    {
         path: '/admin/thong-ke',
         component: lazy(() => import("@pages/Admin/Dashboardv2/Dashboard")),
         isAdmin: true,
     },
     {
         path: '/admin/phim',
-        component: lazy(() => import("@pages/Admin/Movies/Movies")),
+        component: lazy(() => import("@pages/Admin/Movies/list")),
         isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/phim/them-moi',
+        component: lazy(() => import("@pages/Admin/Movies/create")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/phim/:slug/chinh-sua',
+        component: lazy(() => import("@pages/Admin/Movies/edit")),
+        isAdmin: true,
+        isOnlyAdmin: true,
     },
     {
         path: '/admin/tinh-thanh',

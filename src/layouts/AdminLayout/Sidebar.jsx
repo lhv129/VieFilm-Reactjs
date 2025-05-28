@@ -7,6 +7,7 @@ import {
 import { RiMovie2AiFill } from "react-icons/ri";
 import { BiSolidCameraMovie } from "react-icons/bi";
 import { PiProjectorScreenFill } from "react-icons/pi";
+import { MdMovie } from "react-icons/md";
 import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,6 +21,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             icon: <FaChartBar />,
             label: 'Thống kê',
             to: '/admin/thong-ke',
+            roles: ['Admin'],
+        },
+        {
+            icon: <MdMovie />,
+            label: 'Phim',
+            to: '/admin/phim',
             roles: ['Admin'],
         },
         {
@@ -38,7 +45,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             icon: <BiSolidCameraMovie />,
             label: 'Phòng chiếu',
             to: '/admin/phong-chieu',
-            roles: ['Admin','Staff'],
+            roles: ['Admin', 'Staff'],
         },
         {
             icon: <PiProjectorScreenFill />,

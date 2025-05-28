@@ -36,4 +36,24 @@ const getOneById = async (id) => {
     }
 }
 
-export { getMovies, getMoviesByDate, getOne, getOneById };
+const updateStatusMovie = async (body) => {
+    return await axiosClient.post('/movies/update-status-movie', body);
+}
+
+const createMovie = async (body) => {
+    return await axiosClient.post('/movies', body, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+}
+
+const updateMovie = async (slug,body) => {
+    return await axiosClient.put(`/movies/${slug}`, body, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+}
+
+export { getMovies, getMoviesByDate, getOne, getOneById, updateStatusMovie, createMovie,updateMovie };
