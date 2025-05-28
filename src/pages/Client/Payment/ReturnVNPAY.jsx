@@ -5,7 +5,6 @@ import { returnVNPAY } from "@apis/ticketService";
 import { AlertTriangle, CheckCircle } from "lucide-react";
 import TicketCard from "@components/TicketCard/TicketCard";
 import { Helmet } from "react-helmet";
-import { CheckCircle } from "lucide-react";
 
 function ReturnVNPAY() {
     const [loading, setLoading] = useState(true);
