@@ -30,4 +30,24 @@ const returnVNPAY = async () => {
     }
 };
 
-export { holdSeats, deleteHoldSeats, checkOut, returnVNPAY };
+const getAllByUser = async (body) => {
+    try {
+        const res = await axiosClient.post('/tickets/get-all-by-user', body);
+        return res.data;
+    } catch (error) {
+        console.error("Lỗi khi gọi Api Ticket", error);
+        return error.response.data;
+    }
+}
+
+const getOneByUser = async (body) => {
+    try {
+        const res = await axiosClient.post('/tickets/get-one-by-user', body);
+        return res.data;
+    } catch (error) {
+        console.error("Lỗi khi gọi Api Ticket", error);
+        return error.response.data;
+    }
+}
+
+export { holdSeats, deleteHoldSeats, checkOut, returnVNPAY, getAllByUser, getOneByUser };

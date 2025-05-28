@@ -46,6 +46,11 @@ const routers = [
         isPrivate: true,
     },
     {
+        path: '/lich-su-mua-ve/:ticketId/chi-tiet',
+        component: lazy(() => import("@pages/Client/Ticket/Detail")),
+        isPrivate: true,
+    },
+    {
         path: '/admin/thong-ke',
         component: lazy(() => import("@pages/Admin/Dashboardv2/Dashboard")),
         isAdmin: true,

@@ -101,7 +101,7 @@ const MovieList = ({ movies }) => {
                         >
                             {/* Poster */}
                             <div
-                                className="relative group w-full h-[500px] lg:h-80 cursor-pointer overflow-hidden rounded-xl shadow-md"
+                                className="relative group w-full h-[500px] lg:h-100 cursor-pointer overflow-hidden rounded-xl shadow-md"
                                 onClick={() => openTrailer(movie.trailer)}
                             >
                                 <div className="relative w-full h-full">
