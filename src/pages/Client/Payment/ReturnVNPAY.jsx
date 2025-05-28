@@ -67,8 +67,8 @@ function ReturnVNPAY() {
                 <div className="flex items-center justify-center text-green-600 mt-4">
                     <CheckCircle className="w-6 h-6 mr-2" />
                     <h2 className="text-xl font-bold">Thanh toán thành công</h2>
-                    <p className="text-sm text-center mb-6">Có thể chụp lại hoặc vào danh sách vé đã mua để xem lại vé</p>
                 </div>
+                <p className="text-sm text-center mb-6">Có thể chụp lại hoặc vào danh sách vé đã mua để xem lại vé</p>
                 <TicketCard ticketData={ticketData} />;
             </>
         )
