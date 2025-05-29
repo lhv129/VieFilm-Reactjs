@@ -179,6 +179,18 @@ const routers = [
         isOnlyAdmin: true,
     },
     {
+        path: '/admin/ma-giam-gia/them-moi',
+        component: lazy(() => import("@pages/Admin/PromoCode/create")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/ma-giam-gia/:slug/chinh-sua',
+        component: lazy(() => import("@pages/Admin/PromoCode/edit")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
         path: '/admin/nguoi-dung',
         component: lazy(() => import("@pages/Admin/User/list")),
         isAdmin: true,
