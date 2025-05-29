@@ -50,4 +50,16 @@ const getOneByUser = async (body) => {
     }
 }
 
-export { holdSeats, deleteHoldSeats, checkOut, returnVNPAY, getAllByUser, getOneByUser };
+const getAll = async (body) => {
+    return await axiosClient.post('/tickets/get-all', body);
+}
+
+const getOne = async (body) => {
+    return await axiosClient.post('/tickets/get-one', body);
+}
+
+const updateStatus = async (body) => {
+    return await axiosClient.put('/tickets/update/status', body);
+}
+
+export { holdSeats, deleteHoldSeats, checkOut, returnVNPAY, getAllByUser, getOneByUser, getAll, getOne, updateStatus };

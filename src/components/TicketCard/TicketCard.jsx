@@ -1,13 +1,22 @@
+//TicketCard dùng cho card ticket details của user lẫn admin
+
 import { useRef } from "react";
 import html2canvas from 'html2canvas-pro';
-
+import Cookies from "js-cookie";
+import TicketDetail from "@components/TicketDetail/TicketDetail";
+import { useNavigate } from "react-router-dom";
+import { updateStatus } from "@apis/ticketService";
+import { message, Button, Modal } from "antd";
 
 const TicketCard = ({ ticketData }) => {
     const ticketRef = useRef();
+    const user = JSON.parse(Cookies.get("user"));
+    const printRef = useRef();
+    const navigate = useNavigate();
 
     if (!ticketData) return null;
 
-    const { customer, code, totalAmount, details = {}, showtime, movie, cinema, screen } = ticketData;
+    const { code, totalAmount, details = {}, showtime, movie, cinema, screen } = ticketData;
     const { seats = [], products = [] } = details;
 
     const handleSaveInvoice = () => {
@@ -116,14 +125,54 @@ const TicketCard = ({ ticketData }) => {
 
                 </div>
 
-                <div className="flex justify-center mt-6">
+                <div
+                    className={`flex mt-6 ${user?.roleName === 'Admin' || user?.roleName === 'Staff'
+                        ? 'justify-between'
+                        : 'justify-center'
+                        }`}
+                >
                     <button
                         onClick={handleSaveInvoice}
-                        className="text-sm text-blue-600 font-medium border border-blue-500 px-3 py-1 rounded hover:bg-blue-50 transition"
+                        className="text-sm text-blue-600 font-medium border border-blue-500 px-3 py-1 rounded hover:bg-blue-50 transition cursor-pointer"
                     >
                         💾 Lưu hóa đơn
                     </button>
+
+                    {(user?.roleName === 'Admin' || user?.roleName === 'Staff') && (
+                        <Button onClick={() => {
+                            Modal.confirm({
+                                title: "In vé",
+                                content: "Xác nhận để cập nhật trạng thái vé.",
+                                okText: "Đã in",
+                                cancelText: "Huỷ",
+                                onOk: async () => {
+                                    try {
+                                        const storedCinema = JSON.parse(localStorage.getItem("cinema") || "null");
+                                        const cinemaId = storedCinema?._id;
+                                        const ticketId = ticketData?._id;
+
+                                        if (!cinemaId || !ticketId) return;
+
+                                        const res = await updateStatus({ cinemaId, ticketId });
+                                        message.success(res.data.message);
+                                        navigate("/admin/ve");
+                                    } catch (error) {
+                                        console.error("Cập nhật trạng thái in vé thất bại:", error);
+                                        message.error(error.response.data.message);
+                                    }
+                                }
+                            });
+                        }}>
+                            🖨️ In hóa đơn
+                        </Button>
+
+                    )}
+                    <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
+                        <TicketDetail data={ticketData} />
+                    </div>
+
                 </div>
+
             </div>
         </>
     );

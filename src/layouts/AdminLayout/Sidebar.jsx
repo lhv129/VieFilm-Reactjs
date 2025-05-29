@@ -11,6 +11,7 @@ import { MdMovie } from "react-icons/md";
 import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { IoTicketSharp } from "react-icons/io5";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     const location = useLocation();
@@ -51,6 +52,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             icon: <PiProjectorScreenFill />,
             label: 'Suất chiếu',
             to: '/admin/suat-chieu',
+            roles: ['Admin', 'Staff'],
+        },
+        {
+            icon: <IoTicketSharp />,
+            label: 'Vé',
+            to: '/admin/ve',
             roles: ['Admin', 'Staff'],
         },
     ];

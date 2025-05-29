@@ -145,6 +145,16 @@ const routers = [
         isAdmin: true,
     },
     {
+        path: '/admin/ve',
+        component: lazy(() => import("@pages/Admin/Ticket/list")),
+        isAdmin: true,
+    },
+    {
+        path: '/admin/ve/:ticketId/chi-tiet',
+        component: lazy(() => import("@pages/Admin/Ticket/detail")),
+        isAdmin: true,
+    },
+    {
         path: '*',
         component: lazy(() => import("@pages/404NotFound/NotFound")),
     },

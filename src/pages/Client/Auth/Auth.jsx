@@ -17,7 +17,7 @@ function Auth() {
             </Helmet>
             {!user && (
                 <div className="flex justify-center items-start mt-2">
-                    <div className="w-[500px] bg-white rounded-lg shadow-md">
+                    <div className="w-[500px] bg-white rounded-lg shadow-md mx-4">
                         {/* Tabs */}
                         <div className="flex">
                             <button
@@ -41,7 +41,7 @@ function Auth() {
                         </div>
 
                         {/* Content */}
-                        <div className="p-6">
+                        <div className="p-4">
                             {activeTab === 'login' ? <FormLogin /> : <FormRegister />}
                         </div>
                     </div>
