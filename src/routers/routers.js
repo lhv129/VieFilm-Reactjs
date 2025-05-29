@@ -203,6 +203,12 @@ const routers = [
         isOnlyAdmin: true,
     },
     {
+        path: '/admin/thong-tin-tai-khoan',
+        component: lazy(() => import("@pages/Admin/Profile/Profile")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
         path: '*',
         component: lazy(() => import("@pages/404NotFound/NotFound")),
     },

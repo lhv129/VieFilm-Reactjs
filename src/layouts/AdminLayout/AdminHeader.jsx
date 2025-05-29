@@ -3,7 +3,7 @@ import { FaBell, FaBars } from 'react-icons/fa';
 import { useAuth } from "@/contexts/AuthContext";
 import ModalSelect from '@components/Header/Admin/ModalSelect/ModalSelect';
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AdminHeader = ({ setSidebarOpen }) => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -60,9 +60,8 @@ const AdminHeader = ({ setSidebarOpen }) => {
                     />
                     {userMenuOpen && (
                         <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                            <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">Thông tin cá nhân</button>
-                            <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">Đổi mật khẩu</button>
-                            <button className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500" onClick={handleLogout}>Đăng xuất</button>
+                            <Link to={`/admin/thong-tin-tai-khoan`}><button className="block w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">Thông tin cá nhân</button></Link>
+                            <button className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500 cursor-pointer" onClick={handleLogout}>Đăng xuất</button>
                         </div>
                     )}
                 </div>
