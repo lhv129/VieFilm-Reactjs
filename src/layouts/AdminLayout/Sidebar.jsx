@@ -3,15 +3,16 @@ import {
     FaChartBar,
     FaTimes,
     FaMapMarkerAlt,
+    FaRegUserCircle
 } from 'react-icons/fa';
 import { RiMovie2AiFill } from "react-icons/ri";
 import { BiSolidCameraMovie } from "react-icons/bi";
 import { PiProjectorScreenFill } from "react-icons/pi";
-import { MdMovie } from "react-icons/md";
+import { MdMovie, MdDiscount } from "react-icons/md";
 import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { IoTicketSharp } from "react-icons/io5";
+import { IoTicketSharp, IoFastFood } from "react-icons/io5";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     const location = useLocation();
@@ -59,6 +60,24 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             label: 'Vé',
             to: '/admin/ve',
             roles: ['Admin', 'Staff'],
+        },
+        {
+            icon: <IoFastFood />,
+            label: 'Sản phẩm',
+            to: '/admin/san-pham',
+            roles: ['Admin'],
+        },
+        {
+            icon: <MdDiscount />,
+            label: 'Mã giảm giá',
+            to: '/admin/ma-giam-gia',
+            roles: ['Admin'],
+        },
+        {
+            icon: <FaRegUserCircle />,
+            label: 'Người dùng',
+            to: '/admin/nguoi-dung',
+            roles: ['Admin'],
         },
     ];
 

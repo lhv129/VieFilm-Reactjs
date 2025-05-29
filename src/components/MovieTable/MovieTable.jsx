@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Tag, Image, Modal } from 'antd';
+import { Table, Tag, Image, Modal, Switch } from 'antd';
 import Expandable20Text from '@components/ExpandableText/Expandable20Text';
 import Expandable5Text from '@components/ExpandableText/Expandable5Text';
 import renderAgeTag from '@components/renderAgeTag/renderAgeTag';
@@ -137,13 +137,13 @@ const MovieTable = ({ movies, onReload }) => {
             dataIndex: 'status',
             key: 'status',
             render: (status, record) => (
-                <Tag
-                    color={status === 'active' ? 'green' : 'red'}
-                    style={{ cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1 }}
-                    onClick={() => onTagClick(record)}
-                >
-                    {status === 'active' ? 'Đang chiếu' : 'Chưa công chiếu'}
-                </Tag>
+                <Switch
+                    checked={status === 'active'}
+                    checkedChildren="Đang chiếu"
+                    unCheckedChildren="Chưa chiếu"
+                    onChange={() => onTagClick(record)}
+                    disabled={loading}
+                />
             ),
         },
         {

@@ -5,11 +5,11 @@ import { useEffect, useState, useCallback } from "react";
 import { message } from "antd";
 import TicketCard from "@components/TicketCard/TicketCard";
 
-function detail() {
-    const ticketId = useParams();
+function TicketDetail() {
+    const { ticketId } = useParams(); // giả sử route là /ticket/:id
 
     const [loading, setLoading] = useState(false);
-    const [ticket, setTicket] = useState([]);
+    const [ticket, setTicket] = useState(null);
 
     const fetchData = useCallback(() => {
         const storedCinema = JSON.parse(localStorage.getItem("cinema") || "null");
@@ -19,12 +19,9 @@ function detail() {
             return;
         }
         setLoading(true);
-        const data = {
-            ...ticketId,
-            cinemaId: cinemaId
-        }
+        setTicket(null); // reset trước khi fetch
 
-        getOne(data)
+        getOne({ ticketId: ticketId, cinemaId })
             .then((res) => {
                 if (res && res.data?.data) {
                     setTicket(res.data.data[0]);
@@ -38,20 +35,20 @@ function detail() {
             });
     }, [ticketId]);
 
-    // Fetch data on mount and when filters change
     useEffect(() => {
         fetchData();
 
-        const onCinemaChange = () => {
-            fetchData();
-        };
-        window.addEventListener("cinemaChanged", onCinemaChange);
-        window.addEventListener("storage", (e) => {
+        const onCinemaChange = () => fetchData();
+        const onStorageChange = (e) => {
             if (e.key === "cinema") fetchData();
-        });
+        };
+
+        window.addEventListener("cinemaChanged", onCinemaChange);
+        window.addEventListener("storage", onStorageChange);
 
         return () => {
             window.removeEventListener("cinemaChanged", onCinemaChange);
+            window.removeEventListener("storage", onStorageChange);
         };
     }, [fetchData]);
 
@@ -68,7 +65,7 @@ function detail() {
                 <div className="text-center mt-10 text-red-500">Không tìm thấy dữ liệu vé</div>
             )}
         </>
-    )
+    );
 }
 
-export default detail;
+export default TicketDetail;

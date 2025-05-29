@@ -155,6 +155,36 @@ const routers = [
         isAdmin: true,
     },
     {
+        path: '/admin/san-pham',
+        component: lazy(() => import("@pages/Admin/Product/list")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/san-pham/them-moi',
+        component: lazy(() => import("@pages/Admin/Product/create")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/san-pham/:slug/chinh-sua',
+        component: lazy(() => import("@pages/Admin/Product/edit")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/ma-giam-gia',
+        component: lazy(() => import("@pages/Admin/PromoCode/list")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
+        path: '/admin/nguoi-dung',
+        component: lazy(() => import("@pages/Admin/User/list")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
         path: '*',
         component: lazy(() => import("@pages/404NotFound/NotFound")),
     },
