@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import html2canvas from 'html2canvas-pro';
 import Cookies from "js-cookie";
-import TicketDetail from "@components/TicketDetail/TicketDetail";
 import { useNavigate } from "react-router-dom";
 import { updateStatus } from "@apis/ticketService";
 import { message, Button, Modal } from "antd";
@@ -157,7 +156,7 @@ const TicketCard = ({ ticketData }) => {
                                         message.success(res.data.message);
                                         navigate("/admin/ve");
                                     } catch (error) {
-                                        console.error("Cập nhật trạng thái in vé thất bại:", error);
+                                        // console.error("Cập nhật trạng thái in vé thất bại:", error);
                                         message.error(error.response.data.message);
                                     }
                                 }
@@ -167,10 +166,6 @@ const TicketCard = ({ ticketData }) => {
                         </Button>
 
                     )}
-                    <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
-                        <TicketDetail data={ticketData} />
-                    </div>
-
                 </div>
 
             </div>
