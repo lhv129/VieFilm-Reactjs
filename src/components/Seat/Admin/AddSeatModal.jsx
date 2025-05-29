@@ -104,14 +104,21 @@ const AddSeatModal = ({ open, onCancel, screenId, onSuccess }) => {
                     </Form.Item>
 
                     <Form.Item
-                        label="Giá ghế"
+                        label="Giá"
                         name="price"
                         rules={[
-                            { required: true, message: 'Vui lòng nhập giá ghế' },
-                            { type: 'number', message: 'Giá ghế phải là một số' },
+                            { required: true, message: "Vui lòng nhập giá ghế!" },
+                            { type: "number", min: 0, message: "Giá phải lớn hơn hoặc bằng 0" },
                         ]}
                     >
-                        <InputNumber min={65000} max={200000} step={1000} style={{ width: '100%' }} />
+                        <InputNumber
+                            min={0}
+                            style={{ width: "100%" }}
+                            formatter={(value) =>
+                                value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
+                            }
+                            parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                        />
                     </Form.Item>
 
                 </Form>
