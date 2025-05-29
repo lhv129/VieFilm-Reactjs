@@ -110,11 +110,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             >
                 {/* Logo và nút đóng */}
                 <div className="flex items-center justify-between lg:justify-center p-4">
-                    <img
-                        src="/images/header/logo.png"
-                        className="w-20 cursor-pointer"
-                        alt="Logo"
-                    />
+                    <Link to={`/admin/thong-ke`}>
+                        <img
+                            src="/images/header/logo.png"
+                            className="w-20 cursor-pointer"
+                            alt="Logo"
+                        />
+                    </Link>
                     <button
                         className="lg:hidden text-gray-600 hover:text-red-500 transition cursor-pointer"
                         onClick={() => setSidebarOpen(false)}

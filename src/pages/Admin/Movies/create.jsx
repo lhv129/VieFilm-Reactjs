@@ -134,7 +134,6 @@ const create = () => {
                 <Form.Item
                     name="actors"
                     label="Diễn viên"
-                    rules={[{ required: true, message: 'Vui lòng nhập tên diễn viên!' }]}
                 >
                     <Input />
                 </Form.Item>

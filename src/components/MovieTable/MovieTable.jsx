@@ -139,7 +139,7 @@ const MovieTable = ({ movies, onReload }) => {
             render: (status, record) => (
                 <Switch
                     checked={status === 'active'}
-                    checkedChildren="Đang chiếu"
+                    checkedChildren="Công khai"
                     unCheckedChildren="Chưa chiếu"
                     onChange={() => onTagClick(record)}
                     disabled={loading}

@@ -155,7 +155,7 @@ function EditMovie() {
                         <Input />
                     </Form.Item>
 
-                    <Form.Item name="actors" label="Diễn viên" rules={[{ required: true, message: "Vui lòng nhập tên diễn viên!" }]}>
+                    <Form.Item name="actors" label="Diễn viên">
                         <Input />
                     </Form.Item>
 

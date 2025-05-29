@@ -60,12 +60,20 @@ const deleteShowtime = async (body) => {
 }
 
 const getAllByDate = async (body) => {
-    try{
-        const res = await axiosClient.post("/showtimes/get-all-by-date",body);
+    try {
+        const res = await axiosClient.post("/showtimes/get-all-by-date", body);
         return res.data;
-    }catch(error){
+    } catch (error) {
         console.error("Lỗi khi gọi Api Movie");
     }
 }
 
-export { getAllByMovie, getSeats, getAll, createShowtime, getShowtimeById, updateShowtime, deleteShowtime, getAllByDate };
+const getAllByScreen = async (body) => {
+    return await axiosClient.post("/showtimes/get-all-by-screen ", body);
+}
+
+const getEmptyShowtimeByScreen = async (body) => {
+    return await axiosClient.post("/showtimes/get-empty-showtime ", body);
+}
+
+export { getAllByMovie, getSeats, getAll, createShowtime, getShowtimeById, updateShowtime, deleteShowtime, getAllByDate, getAllByScreen, getEmptyShowtimeByScreen };
