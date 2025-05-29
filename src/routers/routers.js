@@ -197,6 +197,12 @@ const routers = [
         isOnlyAdmin: true,
     },
     {
+        path: '/admin/nguoi-dung/:userId/chi-tiet',
+        component: lazy(() => import("@pages/Admin/User/detail")),
+        isAdmin: true,
+        isOnlyAdmin: true,
+    },
+    {
         path: '*',
         component: lazy(() => import("@pages/404NotFound/NotFound")),
     },
