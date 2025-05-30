@@ -5,28 +5,22 @@ import {
 } from 'recharts';
 import { revenueByCinema } from '@apis/dashboard';
 
-function RevenueByCinemaChart({ cinema, province }) {
-    const [revenueByCinemaChart, setRevenueByCinema] = useState({});
+function RevenueByCinemaChart({ cinema }) {
+    const [revenueByCinemaChart, setRevenueByCinema] = useState(null);
     const [selectedRange, setSelectedRange] = useState('week');
 
-    const selectedProvince = province?.name;
-    const selectedCinema = cinema?.name;
     const cinemaId = cinema?._id;
 
     useEffect(() => {
+        if (!cinemaId) return;
         revenueByCinema(cinemaId).then((res) => {
             setRevenueByCinema(res.data);
         });
-    }, []);
+    }, [cinemaId]);
 
-    const cinemaData = revenueByCinemaChart[selectedProvince]?.[selectedCinema]?.[selectedRange] || [];
+    const cinemaData = revenueByCinemaChart?.[selectedRange] || [];
 
-    const tooltipFormatter = (value) => {
-        if (selectedRange === 'week' || selectedRange === 'month' || selectedRange === 'year') {
-            return [`${value} triệu đồng`, 'Doanh thu'];
-        }
-        return value;
-    };
+    const tooltipFormatter = (value) => [`${value} triệu đồng`, 'Doanh thu'];
 
     return (
         <div className="bg-white p-6 rounded-xl shadow">
@@ -44,7 +38,7 @@ function RevenueByCinemaChart({ cinema, province }) {
                     </select>
                 </div>
             </div>
-            {cinemaData.length === 0 ? (
+            {!cinemaData.length ? (
                 <div className="text-center text-gray-500 h-72 flex items-center justify-center">
                     Rạp này chưa có doanh thu
                 </div>
@@ -55,7 +49,13 @@ function RevenueByCinemaChart({ cinema, province }) {
                             <BarChart data={cinemaData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="name" />
-                                <YAxis label={{ angle: -90, position: 'insideLeft', offset: 10 }} />
+                                <YAxis
+                                    label={{
+                                        angle: -90,
+                                        position: 'insideLeft',
+                                        offset: 10
+                                    }}
+                                />
                                 <Tooltip formatter={tooltipFormatter} />
                                 <Bar dataKey="revenue" fill="#4f46e5" />
                             </BarChart>

@@ -23,7 +23,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             icon: <FaChartBar />,
             label: 'Thống kê',
             to: '/admin/thong-ke',
-            roles: ['Admin'],
+            roles: ['Admin', 'Staff'],
         },
         {
             icon: <MdMovie />,

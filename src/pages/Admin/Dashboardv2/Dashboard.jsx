@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import {
-    BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
-    ResponsiveContainer, LabelList
-} from 'recharts';
 import TicketSalesChart from '@components/TicketSalesChart/TicketSalesChart';
 import RevenueByCinemaChart from '@components/RevenueByCinemaChart/RevenueByCinemaChart';
 import RevenueByMovieChart from '@components/RevenueByMovieChart/RevenueByMovieChart';
 import RevenueTopByCinemaChart from '@components/RevenueTopByCinemaChart/RevenueTopByCinemaChart';
 import { Helmet } from "react-helmet";
+import { useAuth } from "@/contexts/AuthContext";
 
 function Dashboard() {
+    const { user, cinema: staffCinema } = useAuth();
+    const [storedCine, setStoredCine] = useState(null);
+    const [storedProv, setStoredProv] = useState(() => JSON.parse(localStorage.getItem('province') || 'null'));
 
-    const [storedProv, setStoredProv] = useState(JSON.parse(localStorage.getItem('province') || 'null'));
-    const [storedCine, setStoredCine] = useState(JSON.parse(localStorage.getItem('cinema') || 'null'));
+    useEffect(() => {
+        if (user?.roleName === 'Staff') {
+            setStoredCine(staffCinema); // lấy trực tiếp từ context
+        } else {
+            setStoredCine(JSON.parse(localStorage.getItem('cinema') || 'null')); // Admin lấy từ localStorage
+        }
+    }, [user, staffCinema]);
 
     const handleLocalStorageChange = () => {
         setStoredProv(JSON.parse(localStorage.getItem('province') || 'null'));
-        setStoredCine(JSON.parse(localStorage.getItem('cinema') || 'null'));
+        if (user?.roleName !== 'Staff') {
+            setStoredCine(JSON.parse(localStorage.getItem('cinema') || 'null'));
+        }
     };
 
     useEffect(() => {
@@ -29,7 +36,7 @@ function Dashboard() {
             window.removeEventListener('provinceChanged', handleLocalStorageChange);
             window.removeEventListener('cinemaChanged', handleLocalStorageChange);
         };
-    }, []);
+    }, [user]);
 
     return (
         <>
@@ -37,22 +44,15 @@ function Dashboard() {
                 <title>Trang quản trị</title>
             </Helmet>
             <div className="p-6 space-y-6">
-                {/* Doanh thu theo Rạp */}
-                <RevenueByCinemaChart cinema={storedCine} province={storedProv}/>
-
-                {/* Doanh thu theo Phim */}
-                <RevenueByMovieChart cinema={storedCine}/>
-
+                <RevenueByCinemaChart cinema={storedCine} />
+                <RevenueByMovieChart cinema={storedCine} />
                 <div className="p-6 space-y-6">
-                    {/* Biểu đồ doanh thu theo cụm rạp */}
-                    <RevenueTopByCinemaChart cinema={storedCine}/>
+                    <RevenueTopByCinemaChart cinema={storedCine} />
                 </div>
-                
                 <TicketSalesChart cinema={storedCine} province={storedProv} />
-
             </div>
         </>
     );
-};
+}
 
 export default Dashboard;

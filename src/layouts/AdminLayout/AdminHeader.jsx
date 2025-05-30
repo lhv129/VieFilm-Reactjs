@@ -11,7 +11,10 @@ const AdminHeader = ({ setSidebarOpen }) => {
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
 
-    const cinemaStor = JSON.parse(localStorage.getItem('cinema') || 'null');
+    const cinemaStor = JSON.parse(
+        localStorage.getItem(user?.roleName === 'Staff' ? 'cinemaStaff' : 'cinema') || 'null'
+    );
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
