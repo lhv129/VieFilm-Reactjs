@@ -16,7 +16,6 @@ function RevenueByMovieChart({ cinema }) {
         setLoading(true);
         revenueByMovie(cinemaId).then((res) => {
             setAllMovieRevenue(res.data);
-            console.log(res.data);
         }).finally(() => setLoading(false));
     }, [cinemaId]);
 
