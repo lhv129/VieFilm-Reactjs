@@ -1,108 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
-    ResponsiveContainer, LabelList,
+    ResponsiveContainer, LabelList
 } from 'recharts';
+import TicketSalesChart from '@components/TicketSalesChart/TicketSalesChart';
+import RevenueByCinemaChart from '@components/RevenueByCinemaChart/RevenueByCinemaChart';
 import { Helmet } from "react-helmet";
 
-const revenueByLocation = {
-    'Hà Nội': {
-        'Rạp A': {
-            week: [
-                { name: 'Mon', revenue: 1200 },
-                { name: 'Tue', revenue: 1400 },
-                { name: 'Wed', revenue: 1000 },
-                { name: 'Thu', revenue: 1600 },
-                { name: 'Fri', revenue: 2000 },
-                { name: 'Sat', revenue: 2200 },
-                { name: 'Sun', revenue: 1800 },
-            ],
-            month: [
-                { name: 'Week 1', revenue: 7000 },
-                { name: 'Week 2', revenue: 8000 },
-                { name: 'Week 3', revenue: 9000 },
-                { name: 'Week 4', revenue: 10000 },
-            ],
-            year: [
-                { name: 'Jan', revenue: 8000 },
-                { name: 'Feb', revenue: 8500 },
-                { name: 'Mar', revenue: 9000 },
-                { name: 'Apr', revenue: 9500 },
-            ],
-        },
-        'Rạp B': {
-            week: [
-                { name: 'Mon', revenue: 1000 },
-                { name: 'Tue', revenue: 1100 },
-                { name: 'Wed', revenue: 1200 },
-                { name: 'Thu', revenue: 1400 },
-                { name: 'Fri', revenue: 1600 },
-                { name: 'Sat', revenue: 1500 },
-                { name: 'Sun', revenue: 1300 },
-            ],
-            month: [
-                { name: 'Week 1', revenue: 6000 },
-                { name: 'Week 2', revenue: 7000 },
-                { name: 'Week 3', revenue: 7500 },
-                { name: 'Week 4', revenue: 7800 },
-            ],
-            year: [
-                { name: 'Jan', revenue: 7000 },
-                { name: 'Feb', revenue: 7200 },
-                { name: 'Mar', revenue: 7400 },
-                { name: 'Apr', revenue: 7600 },
-            ],
-        },
-    },
-    'TP.HCM': {
-        'Rạp C': {
-            week: [
-                { name: 'Mon', revenue: 1300 },
-                { name: 'Tue', revenue: 1500 },
-                { name: 'Wed', revenue: 1600 },
-                { name: 'Thu', revenue: 1700 },
-                { name: 'Fri', revenue: 1900 },
-                { name: 'Sat', revenue: 2000 },
-                { name: 'Sun', revenue: 2100 },
-            ],
-            month: [
-                { name: 'Week 1', revenue: 8000 },
-                { name: 'Week 2', revenue: 8200 },
-                { name: 'Week 3', revenue: 8500 },
-                { name: 'Week 4', revenue: 9000 },
-            ],
-            year: [
-                { name: 'Jan', revenue: 10000 },
-                { name: 'Feb', revenue: 10500 },
-                { name: 'Mar', revenue: 11000 },
-                { name: 'Apr', revenue: 11500 },
-            ],
-        },
-        'Rạp D': {
-            week: [
-                { name: 'Mon', revenue: 900 },
-                { name: 'Tue', revenue: 1000 },
-                { name: 'Wed', revenue: 1100 },
-                { name: 'Thu', revenue: 1200 },
-                { name: 'Fri', revenue: 1300 },
-                { name: 'Sat', revenue: 1400 },
-                { name: 'Sun', revenue: 1500 },
-            ],
-            month: [
-                { name: 'Week 1', revenue: 5000 },
-                { name: 'Week 2', revenue: 5500 },
-                { name: 'Week 3', revenue: 5800 },
-                { name: 'Week 4', revenue: 6000 },
-            ],
-            year: [
-                { name: 'Jan', revenue: 6500 },
-                { name: 'Feb', revenue: 6700 },
-                { name: 'Mar', revenue: 6900 },
-                { name: 'Apr', revenue: 7100 },
-            ],
-        },
-    },
-};
 
 const allMovieRevenue = [
     { name: 'Nhà Bà Nữ', revenue: 459.6 },
@@ -117,34 +21,45 @@ const allMovieRevenue = [
     { name: 'Phim D', revenue: 70 },
 ];
 
-const latestBookings = [
-    { movie: 'Movie X', cinema: 'Rạp A', time: '10:30 AM' },
-    { movie: 'Movie Y', cinema: 'Rạp C', time: '11:00 AM' },
-    { movie: 'Movie Z', cinema: 'Rạp D', time: '01:45 PM' },
+
+// Fake dữ liệu cụm rạp
+const clusterRevenue = [
+    { name: 'CGV', revenue: 120000 },
+    { name: 'Lotte', revenue: 95000 },
+    { name: 'Beta', revenue: 70000 },
+    { name: 'Galaxy', revenue: 85000 },
+    { name: 'BHD Star', revenue: 60000 },
 ];
 
 
 function Dashboard() {
-    const [selectedProvince, setSelectedProvince] = useState('Hà Nội');
-    const [selectedCinema, setSelectedCinema] = useState('Rạp A');
-    const [selectedRange, setSelectedRange] = useState('week');
-    const [movieCount, setMovieCount] = useState(5);
 
-    const provinces = Object.keys(revenueByLocation);
-    const cinemas = Object.keys(revenueByLocation[selectedProvince] || {});
-    const cinemaData =
-        revenueByLocation[selectedProvince]?.[selectedCinema]?.[selectedRange] || [];
+    const [storedProv, setStoredProv] = useState(JSON.parse(localStorage.getItem('province') || 'null'));
+    const [storedCine, setStoredCine] = useState(JSON.parse(localStorage.getItem('cinema') || 'null'));
 
-    const handleProvinceChange = (e) => {
-        const newProvince = e.target.value;
-        setSelectedProvince(newProvince);
-        const firstCinema = Object.keys(revenueByLocation[newProvince])[0];
-        setSelectedCinema(firstCinema);
+    const handleLocalStorageChange = () => {
+        setStoredProv(JSON.parse(localStorage.getItem('province') || 'null'));
+        setStoredCine(JSON.parse(localStorage.getItem('cinema') || 'null'));
     };
 
+    useEffect(() => {
+        window.addEventListener('storage', handleLocalStorageChange);
+        window.addEventListener('provinceChanged', handleLocalStorageChange);
+        window.addEventListener('cinemaChanged', handleLocalStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleLocalStorageChange);
+            window.removeEventListener('provinceChanged', handleLocalStorageChange);
+            window.removeEventListener('cinemaChanged', handleLocalStorageChange);
+        };
+    }, []);
+
+    const [movieCount, setMovieCount] = useState(5);
     const topMovies = [...allMovieRevenue]
         .sort((a, b) => b.revenue - a.revenue)
         .slice(0, movieCount);
+
+
 
     return (
         <>
@@ -152,64 +67,13 @@ function Dashboard() {
                 <title>Trang quản trị</title>
             </Helmet>
             <div className="p-6 space-y-6">
-                {/* Revenue by Cinema */}
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 space-y-2 sm:space-y-0 sm:space-x-4">
-                        <h3 className="text-lg font-semibold">Revenue by Cinema</h3>
-                        <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-                            <select
-                                value={selectedProvince}
-                                onChange={handleProvinceChange}
-                                className="text-sm border rounded px-2 py-1 w-full"
-                            >
-                                {provinces.map((province) => (
-                                    <option key={province} value={province}>
-                                        {province}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                value={selectedCinema}
-                                onChange={(e) => setSelectedCinema(e.target.value)}
-                                className="text-sm border rounded px-2 py-1 w-full"
-                            >
-                                {cinemas.map((cinema) => (
-                                    <option key={cinema} value={cinema}>
-                                        {cinema}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                value={selectedRange}
-                                onChange={(e) => setSelectedRange(e.target.value)}
-                                className="text-sm border rounded px-2 py-1 w-full"
-                            >
-                                <option value="week">Tuần</option>
-                                <option value="month">Tháng</option>
-                                <option value="year">Năm</option>
-                            </select>
-                        </div>
+                {/* Doanh thu theo Rạp */}
+                <RevenueByCinemaChart cinema={storedCine} province={storedProv}/>
 
-                    </div>
-                    <div className="h-72 overflow-x-auto">
-                        <div className="min-w-[500px] h-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={cinemaData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Bar dataKey="revenue" fill="#4f46e5" />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Revenue by Movie */}
+                {/* Doanh thu theo Phim */}
                 <div className="bg-white p-6 rounded-xl shadow">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold">Top Movies by Revenue</h3>
+                        <h3 className="text-lg font-semibold">Top phim theo doanh thu</h3>
                         <div className="flex items-center space-x-2">
                             <label className="text-sm">Hiển thị</label>
                             <select
@@ -241,29 +105,44 @@ function Dashboard() {
                                         width={150}
                                         tick={{ fontSize: 12 }}
                                     />
-                                    <Tooltip />
+                                    <Tooltip formatter={(value) => `${value} tỷ đồng`} />
                                     <Bar dataKey="revenue" fill="#ec4899" barSize={30}>
-                                        <LabelList dataKey="revenue" position="right" />
+                                        <LabelList dataKey="revenue" position="right" formatter={(value) => `${value} tỷ`} />
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
-
                 </div>
 
-                {/* Latest Bookings */}
-                <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-lg font-semibold mb-4">Latest Bookings</h3>
-                    <ul className="space-y-2">
-                        {latestBookings.map((booking, index) => (
-                            <li key={index} className="border-b pb-2">
-                                <strong>{booking.movie}</strong> tại {booking.cinema} –{' '}
-                                <span>{booking.time}</span>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="p-6 space-y-6">
+                    {/* Biểu đồ doanh thu theo cụm rạp */}
+                    <div className="bg-white p-6 rounded-xl shadow">
+                        <h3 className="text-lg font-semibold mb-4">Doanh thu theo Cụm Rạp</h3>
+                        <div className="h-72 overflow-x-auto">
+                            <div className="min-w-[500px] h-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={clusterRevenue}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip formatter={(value) => `${value.toLocaleString()}₫`} />
+                                        <Bar dataKey="revenue" fill="#10b981" barSize={40}>
+                                            <LabelList
+                                                dataKey="revenue"
+                                                position="top"
+                                                formatter={(value) => `${(value / 1000).toFixed(1)}k`}
+                                            />
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <TicketSalesChart cinema={storedCine} province={storedProv} />
+
             </div>
         </>
     );

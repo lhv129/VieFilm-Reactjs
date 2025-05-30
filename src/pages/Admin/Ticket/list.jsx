@@ -195,7 +195,7 @@ const List = () => {
                     rowKey="_id"
                     columns={columns}
                     dataSource={data}
-                    pagination={{ pageSize: 5 }}
+                    pagination={{ pageSize: 10 }}
                     loading={loading}
                     scroll={{ x: "max-content" }}
                 />
