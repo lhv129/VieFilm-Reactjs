@@ -11,9 +11,10 @@ function RevenueByCinemaChart({ cinema, province }) {
 
     const selectedProvince = province?.name;
     const selectedCinema = cinema?.name;
+    const cinemaId = cinema?._id;
 
     useEffect(() => {
-        revenueByCinema().then((res) => {
+        revenueByCinema(cinemaId).then((res) => {
             setRevenueByCinema(res.data);
         });
     }, []);

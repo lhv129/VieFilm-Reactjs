@@ -217,6 +217,7 @@ const Create = () => {
                         <div className="space-y-2">
                             <p><strong>🎬 Phim:</strong> {selectedMovie.title}</p>
                             <p><strong>🕐 Thời lượng:</strong> {selectedMovie.duration} phút</p>
+                            <p><strong>📅 Ngày công chiếu:</strong> {dayjs(selectedMovie.releaseDate).format("DD/MM/YYYY")}</p>
                             <img
                                 src={selectedMovie.poster}
                                 alt="Poster"

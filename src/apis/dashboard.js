@@ -1,8 +1,17 @@
 import axiosClient from "@apis/axiosClient";
 
-const revenueByCinema = async () => {
+const revenueByCinema = async (cinemaId) => {
     try {
-        const res = await axiosClient.post(`/dashboard/get-revenue-by-cinema`);
+        const res = await axiosClient.post(`/dashboard/get-revenue-by-cinema`,{cinemaId:cinemaId});
+        return res.data;
+    } catch (error) {
+        return error.response.data;
+    }
+}
+
+const revenueByMovie = async (cinemaId) => {
+    try {
+        const res = await axiosClient.post(`/dashboard/get-revenue-by-movie`,{cinemaId:cinemaId});
         return res.data;
     } catch (error) {
         return error.response.data;
@@ -12,11 +21,11 @@ const revenueByCinema = async () => {
 
 const ticketSalesChart = async (cinemaId) => {
     try {
-        const res = await axiosClient.post(`/dashboard/get-total-seat`,{cinemaId:cinemaId});
+        const res = await axiosClient.post(`/dashboard/get-total-seat`, { cinemaId: cinemaId });
         return res.data;
     } catch (error) {
         return error.response.data;
     }
 }
 
-export { ticketSalesChart, revenueByCinema }
+export { ticketSalesChart, revenueByCinema,revenueByMovie}
