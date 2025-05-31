@@ -47,7 +47,7 @@ export default function ClientHeader() {
                     <Link to="/phim"><p className="hover:hover:text-[#337ab7]">PHIM</p></Link>
                     <Link to="/thong-tin-rap-phim"><p className="hover:hover:text-[#337ab7]">RẠP</p></Link>
                     <Link to="/gia-ve-xem-phim"><p className="hover:hover:text-[#337ab7]">GIÁ VÉ</p></Link>
-                    <a href="#" className="hover:hover:text-[#337ab7]">TIN MỚI VÀ ƯU ĐÃI</a>
+                    <Link to="/tin-moi-va-uu-dai"><p className="hover:hover:text-[#337ab7]">TIN MỚI VÀ ƯU ĐÃI</p></Link>
                     <Link to="/thong-tin-tai-khoan"><p className="hover:hover:text-[#337ab7]">THÀNH VIÊN</p></Link>
                 </nav>
 

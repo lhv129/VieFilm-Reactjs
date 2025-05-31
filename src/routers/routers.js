@@ -44,7 +44,7 @@ const routers = [
         component: lazy(() => import("@pages/Client/Cinema/Cinema")),
     },
     {
-        path: '/tin-moi-va-giam-gia',
+        path: '/tin-moi-va-uu-dai',
         component: lazy(() => import("@pages/Client/Blog&Discount/Blog&Discount")),
     },
     {
