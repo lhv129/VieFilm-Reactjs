@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from "react-helmet";
 import { Button, Form, Input, message, Upload, Skeleton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { createProvince } from "@apis/cinemaService";
+import { createCinema } from "@apis/cinemaService";
 import { useNavigate } from "react-router-dom";
 
 const create = () => {
@@ -43,7 +43,7 @@ const create = () => {
         }
 
         try {
-            const res = await createProvince(formData);
+            const res = await createCinema(formData);
             message.success(res.data.message);
             navigate("/admin/rap");
         } catch (err) {

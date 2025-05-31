@@ -9,7 +9,7 @@ const getAllByProvince = async (provinceId) => {
     }
 }
 
-const createProvince = async (body) => {
+const createCinema = async (body) => {
     return await axiosClient.post('/cinemas', body, {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -26,7 +26,7 @@ const getOne = async (slug) => {
     }
 }
 
-const editProvince = async (slug, body) => {
+const editCinema = async (slug, body) => {
     return await axiosClient.put(`/cinemas/${slug}`, body, {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -52,4 +52,4 @@ const getOneById = async (id) => {
     }
 }
 
-export { getAllByProvince, createProvince, getOne, editProvince, deleteCinema,getOneById };
+export { getAllByProvince, createCinema, getOne, editCinema, deleteCinema,getOneById };

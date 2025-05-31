@@ -19,7 +19,7 @@ const Unauthorized = () => {
                     onClick={() => navigate('/admin/thong-ke')}
                     className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer"
                 >
-                    Quay lại trang Dashboard
+                    Quay lại
                 </button>
             </div>
         </div>

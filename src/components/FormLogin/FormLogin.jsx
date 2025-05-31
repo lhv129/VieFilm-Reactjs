@@ -10,12 +10,13 @@ import ForgotPasswordModal from '@components/auth/ForgotPasswordModal';
 import ResetPasswordModal from '@components/auth/ResetPasswordModal';
 import { ReloadOutlined } from '@ant-design/icons';
 import { generateCaptcha } from "@/utils/generateCaptcha";
+import { getOneById } from '@apis/cinemaService';
 
 const FormLogin = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { setUser } = useAuth();
+    const { setUser, setCinema } = useAuth();
     const [showForgotModal, setShowForgotModal] = useState(false);
     const [showResetModal, setShowResetModal] = useState(false);
     const [captcha, setCaptcha] = useState('');
@@ -34,6 +35,11 @@ const FormLogin = () => {
             Cookies.set("refresh_token", refresh_token);
             Cookies.set("user", JSON.stringify(user));
             setUser(user);
+
+            if (user?.roleName === 'Staff') {
+                console.log(user?.cinema);
+                setCinema(user?.cinema);
+            }
 
             if (user?.roleName === "Admin" || user?.roleName === "Staff") {
                 navigate("/admin/thong-ke");

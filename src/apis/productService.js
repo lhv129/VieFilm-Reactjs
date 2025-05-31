@@ -23,7 +23,11 @@ const createProduct = async (body) => {
 }
 
 const updateProduct = async (slug, data) => {
-    return await axiosClient.put(`/products/${slug}`, data);
+    return await axiosClient.put(`/products/${slug}`, data, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
 }
 
 const getOne = async (slug) => {
@@ -45,4 +49,4 @@ const deleteProduct = async (slug) => {
     }
 }
 
-export { getProducts, updateStatus, createProduct, updateProduct, getOne, deleteProduct};
+export { getProducts, updateStatus, createProduct, updateProduct, getOne, deleteProduct };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
 import { Button, Form, Input, message, Skeleton, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { getOne, editProvince } from "@apis/cinemaService";
+import { getOne, editCinema } from "@apis/cinemaService";
 import { useParams, useNavigate } from "react-router-dom";
 
 function edit() {
@@ -44,7 +44,7 @@ function edit() {
         }
 
         try {
-            const res = await editProvince(slug, formData);
+            const res = await editCinema(slug, formData);
             message.success(res.data.message);
             navigate("/admin/rap");
         } catch (err) {

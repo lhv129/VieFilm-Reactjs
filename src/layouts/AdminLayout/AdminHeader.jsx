@@ -15,6 +15,8 @@ const AdminHeader = ({ setSidebarOpen }) => {
         localStorage.getItem(user?.roleName === 'Staff' ? 'cinemaStaff' : 'cinema') || 'null'
     );
 
+    const cinemaName = cinemaStor?.name || "Chưa có dữ liệu";
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -49,7 +51,7 @@ const AdminHeader = ({ setSidebarOpen }) => {
                 <ModalSelect />
             ) : (
                 <div className="flex">
-                    <span className="font-semibold text-gray-800 hidden sm:inline text-[10px]">Rạp: {cinemaStor.name}</span>
+                    <span className="font-semibold text-gray-800 hidden sm:inline text-[10px]">Rạp: {cinemaName}</span>
                 </div>
             )}
 

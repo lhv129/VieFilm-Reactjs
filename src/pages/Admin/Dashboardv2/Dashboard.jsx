@@ -9,7 +9,6 @@ import { useAuth } from "@/contexts/AuthContext";
 function Dashboard() {
     const { user, cinema: staffCinema } = useAuth();
     const [storedCine, setStoredCine] = useState(null);
-    const [storedProv, setStoredProv] = useState(() => JSON.parse(localStorage.getItem('province') || 'null'));
 
     useEffect(() => {
         if (user?.roleName === 'Staff') {
@@ -28,12 +27,10 @@ function Dashboard() {
 
     useEffect(() => {
         window.addEventListener('storage', handleLocalStorageChange);
-        window.addEventListener('provinceChanged', handleLocalStorageChange);
         window.addEventListener('cinemaChanged', handleLocalStorageChange);
 
         return () => {
             window.removeEventListener('storage', handleLocalStorageChange);
-            window.removeEventListener('provinceChanged', handleLocalStorageChange);
             window.removeEventListener('cinemaChanged', handleLocalStorageChange);
         };
     }, [user]);
@@ -49,7 +46,7 @@ function Dashboard() {
                 <div className="p-6 space-y-6">
                     <RevenueTopByCinemaChart cinema={storedCine} />
                 </div>
-                <TicketSalesChart cinema={storedCine} province={storedProv} />
+                <TicketSalesChart cinema={storedCine} />
             </div>
         </>
     );
