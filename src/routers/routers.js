@@ -36,6 +36,18 @@ const routers = [
         component: lazy(() => import("@pages/Client/Showtime/Showtime")),
     },
     {
+        path: '/gia-ve-xem-phim',
+        component: lazy(() => import("@pages/Client/MovieTicketPrice/MovieTicketPrice")),
+    },
+    {
+        path: '/thong-tin-rap-phim',
+        component: lazy(() => import("@pages/Client/Cinema/Cinema")),
+    },
+    {
+        path: '/tin-moi-va-giam-gia',
+        component: lazy(() => import("@pages/Client/Blog&Discount/Blog&Discount")),
+    },
+    {
         path: '/thong-tin-tai-khoan',
         component: lazy(() => import("@pages/Client/Profile/Profile")),
         isPrivate: true,

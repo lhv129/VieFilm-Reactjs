@@ -10,8 +10,8 @@ export default function ClientHeader() {
     const navItems = [
         { label: "LỊCH CHIẾU THEO RẠP", path: "/lich-chieu-theo-rap" },
         { label: "PHIM", path: "/phim" },
-        { label: "RẠP", path: "/rap" },
-        { label: "GIÁ VÉ", path: "/gia-ve" },
+        { label: "RẠP", path: "/thong-tin-rap-phim" },
+        { label: "GIÁ VÉ", path: "/gia-ve-xem-phim" },
         { label: "TIN MỚI VÀ ƯU ĐÃI", path: "/tin-moi-va-uu-dai" },
         { label: "THÀNH VIÊN", path: "/thong-tin-tai-khoan" },
     ];
@@ -45,8 +45,8 @@ export default function ClientHeader() {
                 <nav className="hidden md:flex space-x-6 font-bold text-xs uppercase text-gray-800 w-2/3 justify-between">
                     <Link to="/lich-chieu-theo-rap"><p className="hover:hover:text-[#337ab7]">LỊCH CHIẾU THEO RẠP</p></Link>
                     <Link to="/phim"><p className="hover:hover:text-[#337ab7]">PHIM</p></Link>
-                    <a href="#" className="hover:hover:text-[#337ab7]">RẠP</a>
-                    <a href="#" className="hover:hover:text-[#337ab7]">GIÁ VÉ</a>
+                    <Link to="/thong-tin-rap-phim"><p className="hover:hover:text-[#337ab7]">RẠP</p></Link>
+                    <Link to="/gia-ve-xem-phim"><p className="hover:hover:text-[#337ab7]">GIÁ VÉ</p></Link>
                     <a href="#" className="hover:hover:text-[#337ab7]">TIN MỚI VÀ ƯU ĐÃI</a>
                     <Link to="/thong-tin-tai-khoan"><p className="hover:hover:text-[#337ab7]">THÀNH VIÊN</p></Link>
                 </nav>
