@@ -27,6 +27,15 @@ const getOne = async (slug) => {
     }
 }
 
+const getDetails = async (slug) => {
+    try {
+        const res = await axiosClient.get(`/movies/${slug}/details`);
+        return res.data;
+    } catch (error) {
+        console.error("Lỗi khi gọi Api Movie", error);
+    }
+}
+
 const getOneById = async (id) => {
     try {
         const res = await axiosClient.get(`/movies/get-one-by-id/${id}`);
@@ -56,4 +65,4 @@ const updateMovie = async (slug,body) => {
     })
 }
 
-export { getMovies, getMoviesByDate, getOne, getOneById, updateStatusMovie, createMovie,updateMovie };
+export { getMovies, getMoviesByDate, getOne, getOneById, updateStatusMovie, createMovie,updateMovie, getDetails };

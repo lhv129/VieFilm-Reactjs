@@ -1,6 +1,6 @@
 import Preloader from "@components/Preloader/Preloader";
 import NotFound from "@pages/404NotFound/NotFound";
-import { getOne } from "@apis/movieService";
+import { getDetails } from "@apis/movieService";
 import { getAllByMovie } from "@apis/showtimeService";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ function MovieDetail() {
             try {
                 setLoading(true);
 
-                const movieRes = await getOne(slug);
+                const movieRes = await getDetails(slug);
                 if (movieRes && movieRes.data) {
                     setMovie(movieRes.data);
 
