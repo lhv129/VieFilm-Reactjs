@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 function Dashboard() {
     const { user, cinema: staffCinema } = useAuth();
     const [storedCine, setStoredCine] = useState(null);
+    const [storedProv, setStoredProv] = useState(null);
 
     useEffect(() => {
         if (user?.roleName === 'Staff') {
@@ -41,7 +42,7 @@ function Dashboard() {
                 <title>Trang quản trị</title>
             </Helmet>
             <div className="p-6 space-y-6">
-                <RevenueByCinemaChart cinema={storedCine} />
+                <RevenueByCinemaChart cinema={storedCine} storedProv={storedProv}/>
                 <RevenueByMovieChart cinema={storedCine} />
                 <div className="p-6 space-y-6">
                     <RevenueTopByCinemaChart cinema={storedCine} />
